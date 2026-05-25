@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# SynCora
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Syncora** is a mobile-only task and activity manager built with React Native and Expo. Users organize work into activities and tasks, set priority and status, collaborate with others, and sign in with email/password or Google.
 
-## Get started
+## Features
 
-1. Install dependencies
+### Activities & tasks
+- Create and manage **activities** (containers for related work)
+- Add **tasks** under activities with title, description, and due dates
+- **Priority**: `high` | `medium` | `low`
+- **Status**: `pending` | `in_progress` | `done`
 
-   ```bash
-   npm install
-   ```
+### Collaboration
+- **Invite** other users to shared activities or tasks
+- **Follow** users to see their public activity (where permitted)
+- Real-time updates via Supabase (planned)
 
-2. Start the app
+### Authentication
+- **Email & password** — sign up, log in, log out
+- **Google Sign-In** — OAuth via Supabase (mobile)
+- Session handled on device; protected routes in the app
 
-   ```bash
-   npx expo start
-   ```
+### Platform
+- **Mobile only** — iOS and Android via Expo
+- No web client target for v1
 
-In the output, you'll find options to open the app in a
+## Tech stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+| Layer        | Technology                          |
+|-------------|--------------------------------------|
+| Client      | React Native, Expo SDK 54, Expo Router |
+| Auth        | Supabase Authentication (email + Google) |
+| Backend     | C# .NET, Supabase (Postgres, REST/Realtime) |
+| Language    | TypeScript                          |
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+**Architecture (planned)**
 
-## Get a fresh project
 
-When you're ready, run:
+## Data model (planned)
 
+### Task fields
+| Field      | Values                                      |
+|-----------|---------------------------------------------|
+| priority  | `high`, `medium`, `low`                   |
+| status    | `pending`, `in_progress`, `done`            |
+
+### Core entities
+- **profiles** — linked to Supabase UID
+- **activities** — owned or shared workspaces
+- **tasks** — belong to an activity; priority + status
+- **invitations** — pending/accepted invites to collaborate
+- **follows** — follower → followee relationships
+
+## Getting started
+
+### 1. Clone and install
+- Using HTTPS
 ```bash
-npm run reset-project
+git clone https://github.com/ChristianAlicaba2002/SynCora.git
+cd Syncora
+npm install
 ```
+- Using SSH
+```bash
+git clone git@github.com:ChristianAlicaba2002/SynCora.git
+cd Syncora
+npm install
+```
+---
+### 2. Run the app
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash 
+npx expo start
+npm run ios      # shortcut
+npm run android  # shortcut
+```
