@@ -197,7 +197,11 @@ export default function Index() {
               )}
             </Pressable>
 
-            <Pressable style={styles.createButton} onPress={() => { }} disabled={isSubmitting}>
+            <Pressable
+              style={styles.createButton}
+              onPress={() => router.push("/register")}
+              disabled={isSubmitting}
+            >
               <Text style={styles.createButtonText}>Create new account ?</Text>
             </Pressable>
 
