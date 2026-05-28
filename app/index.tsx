@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -113,7 +114,7 @@ export default function Index() {
 
   return (
     <LinearGradient
-      colors={["#9DD4F5", "#4A9FE8", "#2B7FD4"]}
+      colors={Colors.gradient as [string, string, string]}
       locations={[0, 0.45, 1]}
       style={styles.gradient}
     >
@@ -144,7 +145,7 @@ export default function Index() {
               <TextInput
                 style={[styles.input, isError && emailErrorMessage ? styles.inputError : null]}
                 placeholder="Email"
-                placeholderTextColor="rgba(255,255,255,0.85)"
+                placeholderTextColor={Colors.secondary}
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -163,7 +164,7 @@ export default function Index() {
                   isError && passwordErrorMessage ? styles.inputError : null,
                 ]}
                 placeholder="Password"
-                placeholderTextColor="rgba(255,255,255,0.85)"
+                placeholderTextColor={Colors.secondary}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -180,7 +181,7 @@ export default function Index() {
                 <Ionicons
                   name={showPassword ? "eye-outline" : "eye-off-outline"}
                   size={22}
-                  color="#FFFFFF"
+                  color={Colors.secondary}
                 />
               </Pressable>
             </View>
