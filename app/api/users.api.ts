@@ -2,8 +2,7 @@ import type { TRegisterUser } from "../@types";
 import { api } from "./axios";
 
 
-export const RegisterUser = async (data: TRegisterUser) => {
-    const response = await api.post("/users", data);
-
+export const RegisterUserAPI = async (data: TRegisterUser) => {
+    const response = await api.post("/users/register", data);
     return response.data
 }
