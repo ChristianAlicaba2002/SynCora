@@ -1,16 +1,16 @@
 export type TUsers = {
-    Id: string,
-    FirstName: string,
-    MiddleName: string,
-    LastName: string,
-    Gender: string,
-    Email: string,
-    Password: string,
-    ConfirmPassword?: string,
-    Bio: string,
-    ImageUrl: string,
+    id: string,
+    firstName: string,
+    middleName: string,
+    lastName: string,
+    gender: string,
+    email: string,
+    password: string,
+    confirmPassword?: string,
+    bio: string,
+    imageUrl: string,
     CreatedAt: string,
-    UpdateddAt: string,
+    updatedAt: string,
 }
 
-export type TRegisterUser = Pick<TUsers, "FirstName" | "LastName" | "MiddleName" | "Gender" | "Email" | "Password" | "ConfirmPassword">
+export type TRegisterUser = Pick<TUsers, "firstName" | "lastName" | "middleName" | "gender" | "email" | "password" | "confirmPassword">
