@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
@@ -24,7 +25,7 @@ export const styles = StyleSheet.create({
       marginBottom: 10,
     },
     subtitle: {
-      color: "#FFFFFF",
+      color: Colors.secondary,
       fontSize: 16,
       textAlign: "center",
       lineHeight: 24,
@@ -35,18 +36,18 @@ export const styles = StyleSheet.create({
       width: "100%",
       height: 52,
       borderRadius: 14,
-      backgroundColor: "rgba(255,255,255,0.22)",
+      backgroundColor: Colors.bg_color,
       paddingHorizontal: 18,
-      color: "#FFFFFF",
+      color: Colors.secondary,
       fontSize: 16,
       borderWidth: 2,
       borderColor: "transparent",
     },
     inputError: {
-      borderColor: "#FF3B30",
+      borderColor: Colors.error,
     },
     errorMessage: {
-      color: "red",
+      color: Colors.error,
       fontSize: 15,
       margin: 4
     },
@@ -73,7 +74,7 @@ export const styles = StyleSheet.create({
       width: "100%",
       height: 52,
       borderRadius: 14,
-      backgroundColor: "#FFFFFF",
+      backgroundColor: Colors.secondary,
       alignItems: "center",
       justifyContent: "center",
       marginBottom: "auto",
@@ -83,7 +84,7 @@ export const styles = StyleSheet.create({
       opacity: 0.7,
     },
     loginButtonText: {
-      color: "#3B8FD9",
+      color: Colors.primary,
       fontSize: 16,
       fontWeight: "600",
     },
@@ -91,14 +92,14 @@ export const styles = StyleSheet.create({
       width: "100%",
       height: 52,
       borderRadius: 14,
-      backgroundColor: "rgba(208, 208, 208, 0.22)",
+      backgroundColor: Colors.bg_color,
       alignItems: "center",
       justifyContent: "center",
       marginBottom: 55,
       marginTop: 13,
     },
     createButtonText: {
-      color: "rgba(243, 243, 243, 1)",
+      color: Colors.secondary,
       fontSize: 16,
       fontWeight: "600",
     },
@@ -119,13 +120,13 @@ export const styles = StyleSheet.create({
       borderRadius: 50
     },
     googleText: {
-      color: "#FFFFFF",
+      color: Colors.secondary,
       fontSize: 17,
       fontWeight: "500",
     },
 
     footer: {
-      color: "rgba(255,255,255,0.95)",
+      color: Colors.secondary,
       fontSize: 13,
       marginTop: 10,
       textAlign: "center",
