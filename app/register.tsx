@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -138,7 +139,6 @@ export default function Register() {
 
     setIsLoading(true);
 
-    try {
       const displayName = buildDisplayName(firstName, middleName, lastName);
       registerUser({
         firstName: firstName,
@@ -150,23 +150,20 @@ export default function Register() {
       },{
         onSuccess: () => {
           reset();
+          setIsLoading(false);
           router.replace("/");
         },
         onError: (error: any) => {
           if(error.response?.data?.message) {
             setEmailError(error.response?.data?.message);
+            setIsLoading(false);
           } else {
             const message = getAuthErrorMessage(error);
             setEmailError(message);
+            setIsLoading(false);
           }
         },
       });
-    } catch (error) {
-      const message = getAuthErrorMessage(error);
-      setEmailError(message);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -330,7 +327,10 @@ export default function Register() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator color="#3B8FD9" />
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                  <ActivityIndicator size="small" color={Colors.secondary} />
+                  <Text style={styles.primaryButtonText}>Creating...</Text>
+                </View>
               ) : (
                 <Text style={styles.primaryButtonText}>
                   {step === 1 ? "Next" : "Create account"}
