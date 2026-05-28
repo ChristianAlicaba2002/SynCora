@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Colors, ModalColors } from "../../constants/theme";
 
 export const styles = StyleSheet.create({
   gradient: {
@@ -23,7 +24,7 @@ export const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.25)",
+    backgroundColor: Colors.bg_color,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 28,
@@ -45,16 +46,16 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.22)",
+    backgroundColor: Colors.bg_color,
     paddingHorizontal: 18,
-    color: "#FFFFFF",
+    color: Colors.secondary,
     fontSize: 16,
     borderWidth: 2,
     borderColor: "transparent",
     marginBottom: 14,
   },
   inputError: {
-    borderColor: "#FF3B30",
+    borderColor: Colors.error,
   },
   passwordInput: {
     paddingRight: 52,
@@ -69,7 +70,7 @@ export const styles = StyleSheet.create({
     top: 14,
   },
   errorMessage: {
-    color: "#FF6B6B",
+    color: Colors.error,
     fontSize: 14,
     marginTop: -5,
     marginBottom: 10,
@@ -79,7 +80,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.22)",
+    backgroundColor: Colors.bg_color,
     paddingHorizontal: 18,
     flexDirection: "row",
     alignItems: "center",
@@ -89,7 +90,7 @@ export const styles = StyleSheet.create({
     borderColor: "transparent",
   },
   genderText: {
-    color: "#FFFFFF",
+    color: Colors.secondary,
     fontSize: 16,
   },
   bottom: {
@@ -100,7 +101,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: Colors.secondary,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
@@ -109,7 +110,7 @@ export const styles = StyleSheet.create({
     opacity: 0.7,
   },
   primaryButtonText: {
-    color: "#3B8FD9",
+    color: Colors.primary,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -120,11 +121,11 @@ export const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: ModalColors.overlay,
     justifyContent: "flex-end",
   },
   modalSheet: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: ModalColors.background,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingBottom: 32,
@@ -133,10 +134,10 @@ export const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#E5E5E5",
+    borderBottomColor: ModalColors.border,
   },
   modalOptionText: {
     fontSize: 17,
-    color: "#1A4F7A",
+    color: ModalColors.text,
   },
 });
