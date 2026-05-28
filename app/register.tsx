@@ -15,7 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { signUpWithEmail } from "../firebaseConfig";
+import { useRegisterUser } from "./hooks/useUserAuth";
 import { Gender, useRegisterStore } from "./store/registerStore";
 import { styles } from "./styles/register.styles";
 import { getAuthErrorMessage } from "./utils/authErrors";
@@ -64,6 +64,8 @@ export default function Register() {
     setShowConfirmPassword,
     reset,
   } = useRegisterStore();
+  
+  const {mutate: registerUser, isPending} = useRegisterUser()
 
   const handleBack = () => {
     if (step === 2) {
@@ -138,13 +140,28 @@ export default function Register() {
 
     try {
       const displayName = buildDisplayName(firstName, middleName, lastName);
-      await signUpWithEmail(emailOrPhone, password, displayName);
-      reset();
-      router.replace("/");
+      registerUser({
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        gender: gender,
+        email: emailOrPhone,
+        password: password,
+      },{
+        onSuccess: () => {
+          reset();
+          router.replace("/");
+        },
+        onError: (error: any) => {
+          if(error.response?.data?.message) {
+            setEmailError(error.response?.data?.message);
+          } else {
+            const message = getAuthErrorMessage(error);
+            setEmailError(message);
+          }
+        },
+      });
     } catch (error) {
-      if (__DEV__) {
-        console.error("Registration failed:", error);
-      }
       const message = getAuthErrorMessage(error);
       setEmailError(message);
     } finally {
