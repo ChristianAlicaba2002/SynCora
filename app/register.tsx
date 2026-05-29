@@ -66,7 +66,7 @@ export default function Register() {
     reset,
   } = useRegisterStore();
   
-  const {mutate: registerUser, isPending} = useRegisterUser()
+  const {mutate: registerUser} = useRegisterUser()
 
   const handleBack = () => {
     if (step === 2) {
