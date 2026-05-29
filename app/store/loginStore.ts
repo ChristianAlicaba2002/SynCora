@@ -5,6 +5,7 @@ interface LoginStore {
   password: string;
   showPassword: boolean;
   isError: boolean;
+  errorMessage: string;
   emailErrorMessage: string;
   passwordErrorMessage: string;
   isLoading: boolean;
@@ -12,6 +13,7 @@ interface LoginStore {
   setPassword: (value: string) => void;
   setShowPassword: (value: boolean) => void;
   setIsError: (value: boolean) => void;
+  setErrorMessage: (value: string) => void;
   setEmailErrorMessage: (value: string) => void;
   setPasswordErrorMessage: (value: string) => void;
   setIsLoading: (value: boolean) => void;
@@ -23,6 +25,7 @@ const initialState = {
   password: "",
   showPassword: false,
   isError: false,
+  errorMessage: "",
   emailErrorMessage: "",
   passwordErrorMessage: "",
   isLoading: false,
@@ -34,6 +37,7 @@ export const useLoginStore = create<LoginStore>((set) => ({
   setPassword: (value) => set({ password: value }),
   setShowPassword: (value) => set({ showPassword: value }),
   setIsError: (value) => set({ isError: value }),
+  setErrorMessage: (value) => set({errorMessage: value}),
   setEmailErrorMessage: (value) => set({ emailErrorMessage: value }),
   setPasswordErrorMessage: (value) => set({ passwordErrorMessage: value }),
   setIsLoading: (value) => set({ isLoading: value }),
