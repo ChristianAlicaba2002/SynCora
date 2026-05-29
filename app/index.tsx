@@ -117,14 +117,14 @@ export default function Index() {
   };
 
   const { handleGoogleSignIn, isGoogleLoading, isGoogleReady } = useGoogleSignIn({
-    onSuccess: () => router.replace("/home"),
+    onSuccess: () => router.replace("/(tabs)"),
     onError: showAuthError,
   });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.replace("/home");
+        router.replace("/(tabs)");
       }
     });
 
@@ -169,7 +169,7 @@ export default function Index() {
       {
         onSuccess: () => {
           setIsLoading(false);
-          router.replace("/home");
+          router.replace("/(tabs)");
         },
         onError: (error: unknown) => {
           setIsLoading(false);
