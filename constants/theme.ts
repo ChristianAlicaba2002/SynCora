@@ -12,3 +12,10 @@ export const ModalColors = {
   border: "#E5E5E5",
   text: "#1A4F7A",
 };
+
+export const TabBarColors = {
+  pill: "#6EB5EA",
+  active: "#1A6BB5",
+  inactive: "#FFFFFF",
+  screen: "#2B7FD4",
+};
