@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { onAuthStateChanged } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -17,12 +17,24 @@ import {
   TextInput,
   View
 } from "react-native";
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth, signInWithEmail } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
 import { useGoogleSignIn } from "./hooks/useGoogleSignIn";
+import { useLoginUser } from "./hooks/useUserAuth";
 import { useLoginStore } from "./store/loginStore";
 import { styles } from "./styles/login.styles";
-import { getAuthErrorMessage } from "./utils/authErrors";
+
+const TOAST_ENTER_MS = 250;
+const TOAST_VISIBLE_MS = 1500;
+const TOAST_EXIT_MS = 250;
+const TOAST_SLIDE_OFFSET = 32;
 
 export default function Index() {
   const {
@@ -34,6 +46,8 @@ export default function Index() {
     setShowPassword,
     isError,
     setIsError,
+    errorMessage,
+    setErrorMessage,
     emailErrorMessage,
     setEmailErrorMessage,
     passwordErrorMessage,
@@ -43,6 +57,58 @@ export default function Index() {
   } = useLoginStore();
 
   const [refreshing, setRefreshing] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const { mutate: loginUser } = useLoginUser();
+  const toastOpacity = useSharedValue(0);
+  const toastTranslateY = useSharedValue(TOAST_SLIDE_OFFSET);
+
+  const dismissToast = useCallback(() => {
+    setShowErrorToast(false);
+    setErrorMessage("");
+  }, [setErrorMessage]);
+
+  const toastAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: toastOpacity.value,
+    transform: [{ translateY: toastTranslateY.value }],
+  }));
+
+  useEffect(() => {
+    if (!errorMessage) {
+      setShowErrorToast(false);
+      toastOpacity.value = 0;
+      toastTranslateY.value = TOAST_SLIDE_OFFSET;
+      return;
+    }
+
+    setShowErrorToast(true);
+    toastOpacity.value = 0;
+    toastTranslateY.value = TOAST_SLIDE_OFFSET;
+
+    toastOpacity.value = withTiming(1, {
+      duration: TOAST_ENTER_MS,
+      easing: Easing.out(Easing.cubic),
+    });
+    toastTranslateY.value = withTiming(0, {
+      duration: TOAST_ENTER_MS,
+      easing: Easing.out(Easing.cubic),
+    });
+
+    const hideTimer = setTimeout(() => {
+      toastOpacity.value = withTiming(
+        0,
+        { duration: TOAST_EXIT_MS, easing: Easing.in(Easing.cubic) },
+        (finished) => {
+          if (finished) runOnJS(dismissToast)();
+        }
+      );
+      toastTranslateY.value = withTiming(TOAST_SLIDE_OFFSET, {
+        duration: TOAST_EXIT_MS,
+        easing: Easing.in(Easing.cubic),
+      });
+    }, TOAST_ENTER_MS + TOAST_VISIBLE_MS);
+
+    return () => clearTimeout(hideTimer);
+  }, [errorMessage, dismissToast, toastOpacity, toastTranslateY]);
 
   const showAuthError = (message: string) => {
     setIsError(true);
@@ -75,6 +141,7 @@ export default function Index() {
 
   const handleSubmit = async () => {
     setIsError(false);
+    setErrorMessage("");
     setEmailErrorMessage("");
     setPasswordErrorMessage("");
 
@@ -97,17 +164,32 @@ export default function Index() {
 
     setIsLoading(true);
 
-    try {
-      await signInWithEmail(email, password);
-      router.replace("/home");
-    } catch (error) {
-      const message = getAuthErrorMessage(error);
-      setIsError(true);
-      setEmailErrorMessage(message);
-      setPasswordErrorMessage(message);
-    } finally {
-      setIsLoading(false);
-    }
+    loginUser(
+      { email, password },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          router.replace("/home");
+        },
+        onError: (error: unknown) => {
+          setIsLoading(false);
+          const apiMessage =
+            error &&
+            typeof error === "object" &&
+            "response" in error &&
+            error.response &&
+            typeof error.response === "object" &&
+            "data" in error.response &&
+            error.response.data &&
+            typeof error.response.data === "object" &&
+            "message" in error.response.data &&
+            typeof error.response.data.message === "string"
+              ? error.response.data.message
+              : null;
+          setErrorMessage(apiMessage ?? "Login failed. Please try again.");
+        },
+      }
+    );
   };
 
   const isSubmitting = isLoading || isGoogleLoading;
@@ -227,6 +309,22 @@ export default function Index() {
             </Pressable>
             <Text style={styles.footer}>© All right reserved 2026</Text>
           </ScrollView>
+
+          {showErrorToast && errorMessage ? (
+            <Animated.View
+              style={[styles.errorToastContainer, toastAnimatedStyle]}
+              pointerEvents="none"
+            >
+              <View style={styles.errorToast}>
+                <Ionicons
+                  name="alert-circle"
+                  size={22}
+                  color={Colors.secondary}
+                />
+                <Text style={styles.errorToastText}>{errorMessage}</Text>
+              </View>
+            </Animated.View>
+          ) : null}
         </KeyboardAvoidingView>
       </SafeAreaView>
     </LinearGradient>
