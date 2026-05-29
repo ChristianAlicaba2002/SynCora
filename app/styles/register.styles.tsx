@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
   },
   title: {
     color: "#1A4F7A",
-    fontSize: 32,
+    fontSize: 40,
     fontWeight: "700",
     marginBottom: 10,
   },
