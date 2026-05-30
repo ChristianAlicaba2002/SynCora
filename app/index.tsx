@@ -124,7 +124,7 @@ export default function Index() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.replace("/(tabs)");
+        router.replace("/home");
       }
     });
 
@@ -169,7 +169,7 @@ export default function Index() {
       {
         onSuccess: () => {
           setIsLoading(false);
-          router.replace("/(tabs)");
+          router.replace("/home");
         },
         onError: (error: unknown) => {
           setIsLoading(false);
