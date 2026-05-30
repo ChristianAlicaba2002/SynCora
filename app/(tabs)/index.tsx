@@ -13,7 +13,7 @@ export default function HomeTab() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        router.replace("/");
+        router.replace("/home");
         return;
       }
       setEmail(user.email ?? user.displayName ?? "Signed in");
