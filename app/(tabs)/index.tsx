@@ -9,18 +9,31 @@ import { auth } from "../../firebaseConfig";
 export default function HomeTab() {
   const [email, setEmail] = useState<string | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
+        // Only redirect once Firebase has confirmed there is no session
+        setAuthReady(true);
         router.replace("/home");
         return;
       }
       setEmail(user.email ?? user.displayName ?? "Signed in");
+      setAuthReady(true);
     });
 
     return unsubscribe;
   }, []);
+
+  // Don't render anything until Firebase resolves the auth state
+  if (!authReady) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator color={TabBarColors.inactive} size="large" />
+      </SafeAreaView>
+    );
+  }
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
