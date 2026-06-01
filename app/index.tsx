@@ -6,23 +6,23 @@ import { StatusBar } from "expo-status-bar";
 import { onAuthStateChanged } from "firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  Text,
-  TextInput,
-  View
+    ActivityIndicator,
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    RefreshControl,
+    ScrollView,
+    Text,
+    TextInput,
+    View
 } from "react-native";
 import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
+    Easing,
+    runOnJS,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../firebaseConfig";
@@ -124,8 +124,9 @@ export default function Index() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.replace("/home");
+        router.replace("/(tabs)");
       }
+      // If no user, stay on the login screen — no redirect needed
     });
 
     return unsubscribe;
