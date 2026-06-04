@@ -15,3 +15,8 @@ export type TUsers = {
 
 export type TRegisterUser = Pick<TUsers, "firstName" | "lastName" | "middleName" | "gender" | "email" | "password" | "confirmPassword">
 export type TLoginUser = Pick<TUsers, "email" | "password">
+
+export type TLoginResponse = {
+  token: string;
+  user: Omit<TUsers, "password" | "confirmPassword">;
+}
