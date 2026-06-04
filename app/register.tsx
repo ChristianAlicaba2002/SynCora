@@ -5,15 +5,15 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    Pressable,
+    ScrollView,
+    Text,
+    TextInput,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRegisterUser } from "./hooks/useUserAuth";
@@ -168,7 +168,7 @@ export default function Register() {
 
   return (
     <LinearGradient
-      colors={["#9DD4F5", "#4A9FE8", "#2B7FD4"]}
+      colors={["#050d1a", "#0a1628", "#0d1f3c"]}
       locations={[0, 0.45, 1]}
       style={styles.gradient}
     >
