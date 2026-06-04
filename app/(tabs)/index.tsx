@@ -1,73 +1,31 @@
-import { TabBarColors } from "@/constants/theme";
-import { router } from "expo-router";
-import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthStore } from "../store/authStore";
+import { Ionicons } from "@expo/vector-icons";
+import { StyleSheet, Text, View } from "react-native";
+import { useTheme } from "../hooks/useTheme";
 
 export default function HomeTab() {
-  const { clearToken } = useAuthStore();
-  const [isSigningOut, setIsSigningOut] = useState(false);
-
-  const handleSignOut = async () => {
-    setIsSigningOut(true);
-    try {
-      // Clear the JWT — the auth guard will redirect to / automatically
-      clearToken();
-      router.replace("/");
-    } finally {
-      setIsSigningOut(false);
-    }
-  };
-
+  const t = useTheme();
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>SynCora Dashboard</Text>
-
-      <Pressable
-        style={[styles.button, isSigningOut && styles.buttonDisabled]}
-        onPress={handleSignOut}
-        disabled={isSigningOut}
-      >
-        {isSigningOut ? (
-          <ActivityIndicator color={TabBarColors.active} />
-        ) : (
-          <Text style={styles.buttonText}>Sign out</Text>
-        )}
-      </Pressable>
-    </SafeAreaView>
+    <View style={[s.screen, { backgroundColor: t.screen }]}>
+      <View style={[s.blob, s.blob1, { backgroundColor: t.blob1 }]} />
+      <View style={[s.blob, s.blob2, { backgroundColor: t.blob2 }]} />
+      <View style={s.center}>
+        <View style={[s.iconBox, { backgroundColor: "rgba(74,159,232,0.12)", borderColor: "rgba(74,159,232,0.25)" }]}>
+          <Ionicons name="home-outline" size={32} color="#4A9FE8" />
+        </View>
+        <Text style={[s.title, { color: t.textPrimary }]}>Feed</Text>
+        <Text style={[s.subtitle, { color: t.textSecondary }]}>Your activity feed will appear here.</Text>
+      </View>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: TabBarColors.screen,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    paddingBottom: 110,
-  },
-  title: {
-    color: TabBarColors.inactive,
-    fontSize: 28,
-    fontWeight: "700",
-    marginBottom: 32,
-  },
-  button: {
-    backgroundColor: TabBarColors.inactive,
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    borderRadius: 14,
-    minWidth: 160,
-    alignItems: "center",
-  },
-  buttonDisabled: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    color: TabBarColors.active,
-    fontSize: 16,
-    fontWeight: "600",
-  },
+const s = StyleSheet.create({
+  screen: { flex: 1 },
+  center: { flex: 1, alignItems: "center", justifyContent: "center", paddingBottom: 110, gap: 10 },
+  blob: { position: "absolute", borderRadius: 999, opacity: 0.18 },
+  blob1: { width: 320, height: 320, top: -80, left: -80 },
+  blob2: { width: 240, height: 240, bottom: 80, right: -60 },
+  iconBox: { width: 64, height: 64, borderRadius: 18, borderWidth: 1, alignItems: "center", justifyContent: "center" },
+  title: { fontSize: 22, fontWeight: "800" },
+  subtitle: { fontSize: 14, textAlign: "center", paddingHorizontal: 40 },
 });
