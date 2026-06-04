@@ -3,31 +3,29 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { onAuthStateChanged } from "firebase/auth";
 import { useCallback, useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    Pressable,
-    RefreshControl,
-    ScrollView,
-    Text,
-    TextInput,
-    View
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import Animated, {
-    Easing,
-    runOnJS,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "../firebaseConfig";
-import { useGoogleSignIn } from "./hooks/useGoogleSignIn";
 import { useLoginUser } from "./hooks/useUserAuth";
+import { useAuthStore } from "./store/authStore";
 import { useLoginStore } from "./store/loginStore";
 import { styles } from "./styles/login.styles";
 
@@ -59,6 +57,7 @@ export default function Index() {
   const [refreshing, setRefreshing] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const { mutate: loginUser } = useLoginUser();
+  const { setToken } = useAuthStore();
   const toastOpacity = useSharedValue(0);
   const toastTranslateY = useSharedValue(TOAST_SLIDE_OFFSET);
 
@@ -110,28 +109,6 @@ export default function Index() {
     return () => clearTimeout(hideTimer);
   }, [errorMessage, dismissToast, toastOpacity, toastTranslateY]);
 
-  const showAuthError = (message: string) => {
-    setIsError(true);
-    setEmailErrorMessage(message);
-    setPasswordErrorMessage(message);
-  };
-
-  const { handleGoogleSignIn, isGoogleLoading, isGoogleReady } = useGoogleSignIn({
-    onSuccess: () => router.replace("/(tabs)"),
-    onError: showAuthError,
-  });
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.replace("/(tabs)");
-      }
-      // If no user, stay on the login screen — no redirect needed
-    });
-
-    return unsubscribe;
-  }, []);
-
   const onRefresh = () => {
     setRefreshing(true);
     setIsError(false);
@@ -168,9 +145,11 @@ export default function Index() {
     loginUser(
       { email, password },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           setIsLoading(false);
-          router.replace("/home");
+          // Persist the JWT — the auth guard will automatically redirect to /(tabs)
+          setToken(data.token);
+          router.replace("/(tabs)");
         },
         onError: (error: unknown) => {
           setIsLoading(false);
@@ -192,8 +171,6 @@ export default function Index() {
       }
     );
   };
-
-  const isSubmitting = isLoading || isGoogleLoading;
 
   return (
     <LinearGradient
@@ -226,7 +203,10 @@ export default function Index() {
 
             <View style={styles.emailRow}>
               <TextInput
-                style={[styles.input, isError && emailErrorMessage ? styles.inputError : null]}
+                style={[
+                  styles.input,
+                  isError && emailErrorMessage ? styles.inputError : null,
+                ]}
                 placeholder="Email"
                 placeholderTextColor={Colors.secondary}
                 value={email}
@@ -234,9 +214,11 @@ export default function Index() {
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="username"
-                editable={!isSubmitting}
+                editable={!isLoading}
               />
-              <Text style={styles.errorMessage}>{isError && emailErrorMessage}</Text>
+              <Text style={styles.errorMessage}>
+                {isError && emailErrorMessage}
+              </Text>
             </View>
 
             <View style={styles.passwordRow}>
@@ -252,14 +234,16 @@ export default function Index() {
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
                 textContentType="password"
-                editable={!isSubmitting}
+                editable={!isLoading}
               />
-              <Text style={styles.errorMessage}>{isError && passwordErrorMessage}</Text>
+              <Text style={styles.errorMessage}>
+                {isError && passwordErrorMessage}
+              </Text>
               <Pressable
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
                 hitSlop={12}
-                disabled={isSubmitting}
+                disabled={isLoading}
               >
                 <Ionicons
                   name={showPassword ? "eye-outline" : "eye-off-outline"}
@@ -270,9 +254,12 @@ export default function Index() {
             </View>
 
             <Pressable
-              style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
+              style={[
+                styles.loginButton,
+                isLoading && styles.loginButtonDisabled,
+              ]}
               onPress={handleSubmit}
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
               {isLoading ? (
                 <ActivityIndicator color="#3B8FD9" />
@@ -284,30 +271,11 @@ export default function Index() {
             <Pressable
               style={styles.createButton}
               onPress={() => router.push("/register")}
-              disabled={isSubmitting}
+              disabled={isLoading}
             >
               <Text style={styles.createButtonText}>Create new account ?</Text>
             </Pressable>
 
-            <Pressable
-              style={[styles.googleRow, isGoogleLoading && styles.loginButtonDisabled]}
-              onPress={handleGoogleSignIn}
-              disabled={isSubmitting || !isGoogleReady}
-            >
-              {isGoogleLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <>
-                  <View style={styles.googleIconWrap}>
-                    <Image
-                      source={require("../assets/images/google_transparent.jpg")}
-                      style={styles.googleImage}
-                    />
-                  </View>
-                  <Text style={styles.googleText}>Sign in with Google</Text>
-                </>
-              )}
-            </Pressable>
             <Text style={styles.footer}>© All right reserved 2026</Text>
           </ScrollView>
 
