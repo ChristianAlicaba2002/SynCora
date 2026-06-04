@@ -147,7 +147,6 @@ export default function Index() {
       {
         onSuccess: (data) => {
           setIsLoading(false);
-          // Persist the JWT — the auth guard will automatically redirect to /(tabs)
           setToken(data.token);
           router.replace("/(tabs)");
         },
@@ -174,7 +173,7 @@ export default function Index() {
 
   return (
     <LinearGradient
-      colors={Colors.gradient as [string, string, string]}
+      colors={["#050d1a", "#0a1628", "#0d1f3c"]}
       locations={[0, 0.45, 1]}
       style={styles.gradient}
     >
@@ -184,6 +183,7 @@ export default function Index() {
           style={styles.flex}
           behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
+          {/* ── Scrollable top section: logo + inputs ── */}
           <ScrollView
             contentContainerStyle={styles.scroll}
             keyboardShouldPersistTaps="handled"
@@ -208,7 +208,7 @@ export default function Index() {
                   isError && emailErrorMessage ? styles.inputError : null,
                 ]}
                 placeholder="Email"
-                placeholderTextColor={Colors.secondary}
+                placeholderTextColor="rgba(255,255,255,0.35)"
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -229,7 +229,7 @@ export default function Index() {
                   isError && passwordErrorMessage ? styles.inputError : null,
                 ]}
                 placeholder="Password"
-                placeholderTextColor={Colors.secondary}
+                placeholderTextColor="rgba(255,255,255,0.35)"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -252,7 +252,9 @@ export default function Index() {
                 />
               </Pressable>
             </View>
+          </ScrollView>
 
+          <View style={styles.bottom}>
             <Pressable
               style={[
                 styles.loginButton,
@@ -262,7 +264,7 @@ export default function Index() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <ActivityIndicator color="#3B8FD9" />
+                <ActivityIndicator color="#1A4F7A" />
               ) : (
                 <Text style={styles.loginButtonText}>Login</Text>
               )}
@@ -277,7 +279,7 @@ export default function Index() {
             </Pressable>
 
             <Text style={styles.footer}>© All right reserved 2026</Text>
-          </ScrollView>
+          </View>
 
           {showErrorToast && errorMessage ? (
             <Animated.View
