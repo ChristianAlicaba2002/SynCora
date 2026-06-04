@@ -103,27 +103,6 @@ export const styles = StyleSheet.create({
       fontSize: 16,
       fontWeight: "600",
     },
-    googleRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 50,
-    },
-    googleIconWrap: {
-      backgroundColor: "transparent",
-      alignItems: "center",
-      justifyContent: "center",
-      marginRight: 10,
-    },
-    googleImage: {
-      width: 25,
-      height: 25,
-      borderRadius: 50
-    },
-    googleText: {
-      color: Colors.secondary,
-      fontSize: 17,
-      fontWeight: "500",
-    },
 
     footer: {
       color: Colors.secondary,
