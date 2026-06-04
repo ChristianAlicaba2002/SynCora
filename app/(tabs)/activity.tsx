@@ -4,13 +4,11 @@ import {
   FlatList,
   Image,
   ScrollView,
-  Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { styles } from "../styles/activity.styles";
+import { useTheme } from "../hooks/useTheme";
 
 const FRIENDS = [
   { id: "1", src: null },
@@ -20,79 +18,56 @@ const FRIENDS = [
 ];
 
 export default function ActivityTab() {
+  const t = useTheme();
   const [search, setSearch] = useState("");
   const [selectedFriend, setSelectedFriend] = useState<string | null>("3");
 
   return (
-    <SafeAreaView style={styles.screen} edges={["top"]}>
-      <View style={styles.header}>
-        <View style={styles.logoBox}>
-          <Image
-            source={require("../../assets/images/synCora.png")}
-            style={styles.logo}
-          />
-        </View>
+    <View style={{ flex: 1, backgroundColor: t.screen }}>
+      {/* blobs */}
+      <View style={{ position: "absolute", width: 280, height: 280, borderRadius: 999, backgroundColor: t.blob1, opacity: 0.18, top: -60, left: -60 }} />
+      <View style={{ position: "absolute", width: 220, height: 220, borderRadius: 999, backgroundColor: t.blob2, opacity: 0.15, bottom: 120, right: -40 }} />
 
-        <View style={styles.headerRight}>
-          <View style={styles.bellWrapper}>
-            <Ionicons name="notifications-outline" size={26} color="#fff" />
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>10</Text>
-            </View>
-          </View>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 14, paddingBottom: 110, gap: 12 }} showsVerticalScrollIndicator={false}>
 
-          <View style={styles.avatarCircle}>
-            <Ionicons name="person-outline" size={20} color="#fff" />
-          </View>
-        </View>
-      </View>
-
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.searchBar}>
-          <Ionicons
-            name="search-outline"
-            size={16}
-            color="rgba(0,0,0,0.35)"
-            style={styles.searchIcon}
-          />
+        {/* Search */}
+        <View style={{ flexDirection: "row", alignItems: "center", backgroundColor: t.searchBg, borderRadius: 24, paddingHorizontal: 14, height: 44, borderWidth: 1, borderColor: t.searchBorder }}>
+          <Ionicons name="search-outline" size={16} color={t.searchPlaceholder} style={{ marginRight: 8 }} />
           <TextInput
-            style={styles.searchInput}
+            style={{ flex: 1, fontSize: 14, color: t.searchText }}
             placeholder="Search friends..."
-            placeholderTextColor="rgba(0,0,0,0.35)"
+            placeholderTextColor={t.searchPlaceholder}
             value={search}
             onChangeText={setSearch}
           />
         </View>
 
+        {/* Friends row */}
         <FlatList
           horizontal
           data={FRIENDS}
           keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
-          style={styles.friendsRow}
-          contentContainerStyle={styles.friendsRowContent}
+          scrollEnabled={false}
+          contentContainerStyle={{ gap: 10, paddingVertical: 4 }}
           renderItem={({ item: friend }) => {
             const isSelected = selectedFriend === friend.id;
             return (
               <TouchableOpacity
                 onPress={() => setSelectedFriend(friend.id)}
-                style={[
-                  styles.friendAvatarWrapper,
-                  isSelected && styles.friendAvatarSelected,
-                ]}
+                style={{
+                  width: 62, height: 62, borderRadius: isSelected ? 14 : 31,
+                  borderWidth: 2,
+                  borderColor: isSelected ? "#4A9FE8" : "transparent",
+                  overflow: "hidden",
+                }}
                 activeOpacity={0.8}
               >
                 {friend.src ? (
-                  <Image
-                    source={{ uri: friend.src }}
-                    style={styles.friendAvatar}
-                  />
+                  <Image source={{ uri: friend.src }} style={{ width: "100%", height: "100%" }} />
                 ) : (
-                  <View style={styles.friendAvatarPlaceholder}>
-                    <Ionicons name="person" size={28} color="#aac8e8" />
+                  <View style={{ flex: 1, backgroundColor: t.glassBg, alignItems: "center", justifyContent: "center", borderWidth: 1, borderColor: t.glassBorder }}>
+                    <Ionicons name="person" size={28} color={t.textSecondary} />
                   </View>
                 )}
               </TouchableOpacity>
@@ -100,22 +75,23 @@ export default function ActivityTab() {
           }}
         />
 
+        {/* Wide card */}
+        <View style={{ height: 130, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
 
-        <View style={[styles.card, styles.cardWide]} />
-
-        {/* Row 2 — three cards */}
-        <View style={styles.cardRow}>
-          <View style={[styles.card, styles.cardThird]} />
-          <View style={[styles.card, styles.cardThird]} />
-          <View style={[styles.card, styles.cardThirdNarrow]} />
+        {/* Row 2 */}
+        <View style={{ flexDirection: "row", gap: 10, height: 110 }}>
+          <View style={{ flex: 1, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
+          <View style={{ flex: 1, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
+          <View style={{ width: 50, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
         </View>
 
-        <View style={styles.cardRow}>
-          <View style={[styles.card, styles.cardNarrow]} />
-          <View style={[styles.card, styles.cardThird]} />
-          <View style={[styles.card, styles.cardThird]} />
+        {/* Row 3 */}
+        <View style={{ flexDirection: "row", gap: 10, height: 110 }}>
+          <View style={{ width: 50, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
+          <View style={{ flex: 1, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
+          <View style={{ flex: 1, backgroundColor: t.glassBg, borderRadius: 16, borderWidth: 1, borderColor: t.glassBorder }} />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
