@@ -1,44 +1,19 @@
 import { TabBarColors } from "@/constants/theme";
 import { router } from "expo-router";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { auth } from "../../firebaseConfig";
+import { useAuthStore } from "../store/authStore";
 
 export default function HomeTab() {
-  const [email, setEmail] = useState<string | null>(null);
+  const { clearToken } = useAuthStore();
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [authReady, setAuthReady] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        // Only redirect once Firebase has confirmed there is no session
-        setAuthReady(true);
-        router.replace("/home");
-        return;
-      }
-      setEmail(user.email ?? user.displayName ?? "Signed in");
-      setAuthReady(true);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  // Don't render anything until Firebase resolves the auth state
-  if (!authReady) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator color={TabBarColors.inactive} size="large" />
-      </SafeAreaView>
-    );
-  }
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
     try {
-      await signOut(auth);
+      // Clear the JWT — the auth guard will redirect to / automatically
+      clearToken();
       router.replace("/");
     } finally {
       setIsSigningOut(false);
@@ -48,7 +23,6 @@ export default function HomeTab() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>SynCora Dashboard</Text>
-      <Text style={styles.subtitle}>Welcome, {email ?? "..."}</Text>
 
       <Pressable
         style={[styles.button, isSigningOut && styles.buttonDisabled]}
@@ -78,11 +52,6 @@ const styles = StyleSheet.create({
     color: TabBarColors.inactive,
     fontSize: 28,
     fontWeight: "700",
-    marginBottom: 8,
-  },
-  subtitle: {
-    color: "rgba(255,255,255,0.9)",
-    fontSize: 16,
     marginBottom: 32,
   },
   button: {
