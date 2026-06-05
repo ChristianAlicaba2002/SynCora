@@ -1,28 +1,37 @@
 import { router, useRootNavigationState, useSegments } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAuthStore } from "../store/authStore";
 
 /**
  * Auth middleware hook.
- * Only redirects when the token value itself changes (login / logout).
- * Does NOT re-run on tab switches — that would fight the tab navigator.
+ * - Waits for Zustand persist hydration before making any routing decision.
+ * - Redirects to /(tabs) when a token exists and the user is on a public screen.
+ * - Redirects to / when no token and the user is inside the tabs group.
+ * - Segments are kept in a ref so tab-switching never re-triggers the guard.
  */
 export function useAuthGuard() {
   const token = useAuthStore((s) => s.token);
+  const hasHydrated = useAuthStore((s) => s._hasHydrated);
   const segments = useSegments();
   const navigationState = useRootNavigationState();
 
+  // Always keep segments ref current without adding it to effect deps
+  const segmentsRef = useRef(segments);
   useEffect(() => {
-    // Navigator not ready yet — wait
-    if (!navigationState?.key) return;
+    segmentsRef.current = segments;
+  }, [segments]);
 
-    const inAuthGroup = segments[0] === "(tabs)";
+  useEffect(() => {
+    // Wait for navigation to be ready and store to be hydrated
+    if (!navigationState?.key || !hasHydrated) return;
 
-    if (token && !inAuthGroup) {
+    const inTabsGroup = segmentsRef.current[0] === "(tabs)";
+
+    if (token && !inTabsGroup) {
       router.replace("/(tabs)");
-    } else if (!token && inAuthGroup) {
+    } else if (!token && inTabsGroup) {
       router.replace("/");
     }
-    
-  }, [token, navigationState?.key]);
+    // Only re-run when token or hydration status changes — NOT on segment changes
+  }, [token, hasHydrated, navigationState?.key]);
 }
