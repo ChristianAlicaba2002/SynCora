@@ -1,61 +1,66 @@
 import { StyleSheet } from "react-native";
-import { Colors, ModalColors } from "../../constants/theme";
+
+const GLASS_BG    = "rgba(255,255,255,0.06)";
+const GLASS_BORDER = "rgba(255,255,255,0.13)";
+const WHITE       = "#ffffff";
+const WHITE_60    = "rgba(255,255,255,0.6)";
+const ERROR       = "#FF453A";
 
 export const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,
-  },
-  safe: {
-    flex: 1,
-  },
-  flex: {
-    flex: 1,
-  },
+  gradient: { flex: 1 },
+  safe:     { flex: 1 },
+  flex:     { flex: 1 },
   content: {
     flex: 1,
-    paddingHorizontal: 28,
+    paddingHorizontal: 24,
     paddingTop: 8,
   },
   scroll: {
     flexGrow: 1,
     paddingBottom: 16,
   },
+
   backButton: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: Colors.bg_color,
+    backgroundColor: GLASS_BG,
+    borderWidth: 1,
+    borderColor: GLASS_BORDER,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 28,
+    marginBottom: 24,
   },
+
   title: {
-    color: "#1A4F7A",
-    fontSize: 40,
-    fontWeight: "700",
-    marginBottom: 10,
+    color: WHITE,
+    fontSize: 36,
+    fontWeight: "800",
+    marginBottom: 8,
+    letterSpacing: 0.2,
   },
   subtitle: {
-    color: "rgba(255,255,255,0.92)",
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 32,
+    color: WHITE_60,
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 28,
     fontWeight: "500",
   },
+
   input: {
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: Colors.bg_color,
+    backgroundColor: GLASS_BG,
     paddingHorizontal: 18,
-    color: Colors.secondary,
+    color: WHITE,
     fontSize: 16,
-    borderWidth: 2,
-    borderColor: "transparent",
-    marginBottom: 14,
+    borderWidth: 1.5,
+    borderColor: GLASS_BORDER,
+    marginBottom: 12,
   },
   inputError: {
-    borderColor: Colors.error,
+    borderColor: ERROR,
   },
   passwordInput: {
     paddingRight: 52,
@@ -70,74 +75,81 @@ export const styles = StyleSheet.create({
     top: 14,
   },
   errorMessage: {
-    color: Colors.error,
-    fontSize: 14,
-    marginTop: -5,
+    color: ERROR,
+    fontSize: 13,
+    marginTop: -6,
     marginBottom: 10,
     marginLeft: 4,
   },
+
   genderButton: {
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: Colors.bg_color,
+    backgroundColor: GLASS_BG,
     paddingHorizontal: 18,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 14,
-    borderWidth: 2,
-    borderColor: "transparent",
+    marginBottom: 12,
+    borderWidth: 1.5,
+    borderColor: GLASS_BORDER,
   },
   genderText: {
-    color: Colors.secondary,
+    color: WHITE,
     fontSize: 16,
   },
+
   bottom: {
-    paddingHorizontal: 28,
+    paddingHorizontal: 24,
     paddingBottom: 24,
   },
   primaryButton: {
     width: "100%",
     height: 52,
     borderRadius: 14,
-    backgroundColor: Colors.secondary,
+    backgroundColor: WHITE,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.5)",
   },
-  primaryButtonDisabled: {
-    opacity: 0.7,
-  },
+  primaryButtonDisabled: { opacity: 0.65 },
   primaryButtonText: {
-    color: Colors.primary,
+    color: "#1A4F7A",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
   },
+
   footer: {
-    color: "rgba(255,255,255,0.95)",
-    fontSize: 13,
+    color: "rgba(255,255,255,0.35)",
+    fontSize: 12,
     textAlign: "center",
   },
+
+  // Gender modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: ModalColors.overlay,
+    backgroundColor: "rgba(0,0,0,0.6)",
     justifyContent: "flex-end",
   },
   modalSheet: {
-    backgroundColor: ModalColors.background,
+    backgroundColor: "#0d1f3c",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    borderTopWidth: 1,
+    borderColor: GLASS_BORDER,
     paddingBottom: 32,
   },
   modalOption: {
     paddingVertical: 16,
     paddingHorizontal: 24,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: ModalColors.border,
+    borderBottomColor: GLASS_BORDER,
   },
   modalOptionText: {
     fontSize: 17,
-    color: ModalColors.text,
+    color: WHITE,
   },
 });
