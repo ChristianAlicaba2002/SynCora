@@ -20,3 +20,19 @@ export type TLoginResponse = {
   token: string;
   user: Omit<TUsers, "password" | "confirmPassword">;
 }
+
+export type TTasks = {
+  title: string,
+  description: string,
+  status: string,
+  priority: string,
+  dueDate: string,
+}
+
+export type TCreateTask = Omit<TTasks, "id">
+
+export type TTask = TTasks & {
+  id: string,
+  createdAt: string,
+  updatedAt: string,
+}
