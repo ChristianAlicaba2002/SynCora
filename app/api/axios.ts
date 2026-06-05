@@ -10,8 +10,27 @@ export const api = axios.create({
   },
 });
 
-// Attach JWT token to every request if present
-api.interceptors.request.use((config) => {
+// Returns a promise that resolves once the persist store has rehydrated.
+function waitForHydration(): Promise<void> {
+  return new Promise((resolve) => {
+    // Already hydrated — resolve immediately
+    if (useAuthStore.getState()._hasHydrated) {
+      resolve();
+      return;
+    }
+    // Wait for the hydration flag to flip
+    const unsub = useAuthStore.subscribe((state) => {
+      if (state._hasHydrated) {
+        unsub();
+        resolve();
+      }
+    });
+  });
+}
+
+// Attach the JWT token on every request, waiting for hydration if needed.
+api.interceptors.request.use(async (config) => {
+  await waitForHydration();
   const token = useAuthStore.getState().token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
