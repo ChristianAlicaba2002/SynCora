@@ -145,9 +145,9 @@ export default function Index() {
     loginUser(
       { email, password },
       {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
           setIsLoading(false);
-          setToken(data.token);
+          await setToken(data.jwt);
           router.replace("/(tabs)");
         },
         onError: (error: unknown) => {
