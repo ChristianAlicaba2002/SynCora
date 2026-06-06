@@ -37,4 +37,11 @@ export type TTask = TTasks & {
   id: string,
   createdAt: string,
   updatedAt: string,
+  userId: string,
+}
+
+export type TTasksResponse = {
+  message: string,
+  status: number,
+  data: TTask[],
 }
