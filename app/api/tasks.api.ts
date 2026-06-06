@@ -1,4 +1,4 @@
-import type { TCreateTask } from "../@types";
+import type { TCreateTask, TTask, TTasksResponse } from "../@types";
 import { api } from "./axios";
 
 export const createTaskAPI = async (data: TCreateTask) => {
@@ -6,7 +6,7 @@ export const createTaskAPI = async (data: TCreateTask) => {
   return response.data;
 };
 
-// export const getTasksAPI = async (): Promise<TTask[]> => {
-//   const response = await api.get("/tasks");
-//   return response.data;
-// };
+export const getTasksAPI = async (): Promise<TTask[]> => {
+  const response = await api.get<TTasksResponse>("/tasks");
+  return response.data.data;
+};
