@@ -140,6 +140,7 @@ export default function MenuTab() {
         <ScrollView contentContainerStyle={s.scroll} showsVerticalScrollIndicator={false}>
 
           {/* Profile banner */}
+          <TouchableOpacity activeOpacity={0.75}  onPress={() => router.push("/screens/profile" as any)}>
           <View style={[s.profileBanner, { borderColor: t.glassBorder }]}>
             <BlurView intensity={16} tint={t.blurTint} style={StyleSheet.absoluteFill} />
             <View style={[s.sectionShine, { backgroundColor: t.glassShine }]} />
@@ -156,6 +157,7 @@ export default function MenuTab() {
               </TouchableOpacity>
             </View>
           </View>
+          </TouchableOpacity>
 
           {/* Sections */}
           {sections.map((sec) => (
