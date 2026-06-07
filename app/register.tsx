@@ -16,7 +16,7 @@ import {
     View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRegisterUser } from "./hooks/useUserAuth";
+import { useRegisterUser } from "./hooks/useUsers";
 import { Gender, useRegisterStore } from "./store/registerStore";
 import { styles } from "./styles/register.styles";
 import { getAuthErrorMessage } from "./utils/authErrors";
