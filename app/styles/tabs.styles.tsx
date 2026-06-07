@@ -14,7 +14,7 @@ export const tabBarStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.1)",
     paddingHorizontal: 4,
-    paddingTop: 0,
+    paddingTop: 5,
     paddingBottom: 0,
     elevation: 0,
     shadowOpacity: 0,
