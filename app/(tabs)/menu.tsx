@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
+import { router } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -41,7 +42,12 @@ export default function MenuTab() {
       {
         text: "Sign out",
         style: "destructive",
-        onPress: () => { setIsSigningOut(true); clearToken(); },
+        onPress: async () => {
+          setIsSigningOut(true);
+          await clearToken();
+          // Small delay to let Zustand state propagate before navigating
+          setTimeout(() => router.replace("/"), 50);
+        },
       },
     ]);
   };
