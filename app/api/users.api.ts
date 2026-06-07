@@ -1,4 +1,4 @@
-import type { TLoginResponse, TLoginUser, TRegisterUser } from "../@types";
+import type { TLoginResponse, TLoginUser, TRegisterUser, TUsers } from "../@types";
 import { api } from "./axios";
 
 export const LoginUserAPI = async (data: TLoginUser): Promise<TLoginResponse> => {
@@ -9,4 +9,14 @@ export const LoginUserAPI = async (data: TLoginUser): Promise<TLoginResponse> =>
 export const RegisterUserAPI = async (data: TRegisterUser) => {
   const response = await api.post("/users/register", data);
   return response.data;
+};
+
+export const getCurrentUserAPI = async (): Promise<TUsers> => {
+  const response = await api.get<{ data: TUsers }>(`/users/me`);
+  return response.data.data;
+};
+
+export const updateProfileAPI = async (data: import("../@types").TUpdateProfile): Promise<TUsers> => {
+  const response = await api.patch<{ data: TUsers }>("/users/me", data);
+  return response.data.data;
 };
