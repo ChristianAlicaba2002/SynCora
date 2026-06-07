@@ -1,48 +1,85 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../hooks/useTheme";
+import { s } from "../styles/appHeader.styles";
 
 export default function AppHeader() {
   const insets = useSafeAreaInsets();
   const t = useTheme();
 
   return (
-    <View style={[s.wrapper, { paddingTop: insets.top, backgroundColor: t.headerBg, borderBottomColor: t.headerBorder }]}>
-      <BlurView intensity={20} tint={t.blurTint} style={StyleSheet.absoluteFill} />
-      <View style={[s.shine, { backgroundColor: t.glassShine }]} />
+    <View style={[s.wrapper, { paddingTop: insets.top, borderBottomColor: t.headerBorder, backgroundColor: t.screen }]}>
+      {/* Frosted background */}
+      <BlurView intensity={28} tint={t.blurTint} style={StyleSheet.absoluteFill} />
+
+      <LinearGradient
+        colors={["rgba(74,159,232,0.5)", "rgba(74,159,232,0)", "rgba(74,159,232,0.2)"]}
+        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+        style={s.shimmerLine}
+      />
 
       <View style={s.inner}>
-        <View style={[s.logoBox, { backgroundColor: t.glassBg, borderColor: t.glassBorder }]}>
-          <Image source={require("../../assets/images/synCora.png")} style={s.logo} />
+
+        <View style={s.left}>
+          <View style={[s.logoRing, { borderColor: "rgba(74,159,232,0.4)" }]}>
+            <LinearGradient
+              colors={["rgba(74,159,232,0.2)", "rgba(74,159,232,0.05)"]}
+              style={StyleSheet.absoluteFill}
+            />
+            <Image
+              source={require("../../assets/images/synCora.png")}
+              style={s.logo}
+            />
+          </View>
+          <View style={s.wordmark}>
+            <Text style={[s.appName, { color: t.textPrimary }]}>SynCora</Text>
+            <View style={s.tagRow}>
+              <View style={s.tagDot} />
+              <Text style={[s.tagline, { color: t.textSecondary }]}>Task Manager</Text>
+            </View>
+          </View>
         </View>
 
         <View style={s.right}>
-          <View style={s.bellWrapper}>
-            <Ionicons name="notifications-outline" size={24} color={t.headerIcon} />
+          {/* Notification bell */}
+          <TouchableOpacity activeOpacity={0.75} style={s.actionBtn}>
+            <BlurView intensity={18} tint={t.blurTint} style={StyleSheet.absoluteFill} />
+            <View style={[s.actionBorder, { borderColor: "rgba(255,255,255,0.12)" }]} />
+            <Ionicons name="notifications-outline" size={20} color={t.headerIcon} />
+            {/* Notification badge */}
             <View style={s.badge}>
-              <Text style={s.badgeText}>10</Text>
+              <LinearGradient colors={["#FF6B6B", "#FF453A"]} style={StyleSheet.absoluteFill} />
+              <Text style={s.badgeText}>3</Text>
             </View>
-          </View>
-          <View style={[s.avatarCircle, { backgroundColor: t.glassBg, borderColor: t.glassBorder }]}>
-            <Ionicons name="person-outline" size={18} color={t.headerIcon} />
-          </View>
+          </TouchableOpacity>
+
+          {/* Avatar */}
+          <TouchableOpacity
+            activeOpacity={0.75}
+            style={s.avatarBtn}
+            onPress={() => router.push("/screens/profile" as any)}
+          >
+            <LinearGradient
+              colors={["#2a6fc4", "#4A9FE8"]}
+              style={StyleSheet.absoluteFill}
+              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+            />
+            <View style={[s.avatarBorder, { borderColor: "rgba(74,159,232,0.6)" }]} />
+            <Ionicons name="person" size={16} color="#fff" />
+          </TouchableOpacity>
         </View>
       </View>
+
+      {/* Bottom border glow */}
+      <LinearGradient
+        colors={["transparent", "rgba(74,159,232,0.25)", "transparent"]}
+        start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+        style={s.bottomGlow}
+      />
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  wrapper: { overflow: "hidden", borderBottomWidth: 1 },
-  shine: { position: "absolute", bottom: 0, left: 0, right: 0, height: StyleSheet.hairlineWidth },
-  inner: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 10 },
-  logoBox: { width: 44, height: 44, borderRadius: 10, borderWidth: 1, alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  logo: { width: 44, height: 44, resizeMode: "cover" },
-  right: { flexDirection: "row", alignItems: "center", gap: 14 },
-  bellWrapper: { position: "relative" },
-  badge: { position: "absolute", top: -4, right: -6, backgroundColor: "#FF453A", borderRadius: 8, minWidth: 16, height: 16, alignItems: "center", justifyContent: "center", paddingHorizontal: 3 },
-  badgeText: { color: "#fff", fontSize: 9, fontWeight: "700" },
-  avatarCircle: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, alignItems: "center", justifyContent: "center" },
-});
