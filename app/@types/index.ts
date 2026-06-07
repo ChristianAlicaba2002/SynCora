@@ -9,7 +9,7 @@ export type TUsers = {
     confirmPassword?: string,
     bio: string,
     imageUrl: string,
-    CreatedAt: string,
+    createdAt: string,
     updatedAt: string,
 }
 
@@ -32,12 +32,14 @@ export type TTasks = {
 }
 
 export type TCreateTask = Omit<TTasks, "id">
+export type TUpdateTask = Partial<TTasks>
+export type TUpdateProfile = Partial<Pick<TUsers, "firstName" | "lastName" | "middleName" | "gender" | "bio" | "imageUrl">>
 
 export type TTask = TTasks & {
-  id: string,
-  createdAt: string,
-  updatedAt: string,
-  userId: string,
+  id?: string,
+  createdAt?: string,
+  updatedAt?: string,
+  userId?: string,
 }
 
 export type TTasksResponse = {
