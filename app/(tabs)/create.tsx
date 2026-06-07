@@ -1,7 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
+import { useRef } from "react";
 import {
   ActivityIndicator,
+  Animated,
+  Easing,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -12,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { scheduleTaskCreatedNotification } from "../hooks/useTaskNotification";
 import { useCreateTask } from "../hooks/useTasks";
 import { useTheme } from "../hooks/useTheme";
 import {
@@ -35,13 +39,11 @@ const PRIORITY_OPTIONS: { value: Priority; label: string; color: string; icon: s
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
-
 function addDays(n: number) {
   const d = new Date();
   d.setDate(d.getDate() + n);
   return d.toISOString();
 }
-
 const DATE_PRESETS = [
   { label: "Today",    iso: addDays(0) },
   { label: "Tomorrow", iso: addDays(1) },
@@ -49,9 +51,41 @@ const DATE_PRESETS = [
   { label: "+1 week",  iso: addDays(7) },
 ];
 
+// ── Success Toast ────────────────────────────────────────────────────────
+function useSuccessToast() {
+  const opacity   = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(24)).current;
+  const scale     = useRef(new Animated.Value(0.88)).current;
+
+  const show = () => {
+    opacity.setValue(0);
+    translateY.setValue(24);
+    scale.setValue(0.88);
+
+    Animated.parallel([
+      Animated.timing(opacity,    { toValue: 1,    duration: 320, easing: Easing.out(Easing.back(1.4)), useNativeDriver: true }),
+      Animated.timing(translateY, { toValue: 0,    duration: 320, easing: Easing.out(Easing.back(1.4)), useNativeDriver: true }),
+      Animated.timing(scale,      { toValue: 1,    duration: 320, easing: Easing.out(Easing.back(1.4)), useNativeDriver: true }),
+    ]).start(() => {
+      setTimeout(() => {
+        Animated.parallel([
+          Animated.timing(opacity,    { toValue: 0, duration: 260, easing: Easing.in(Easing.cubic), useNativeDriver: true }),
+          Animated.timing(translateY, { toValue: 16, duration: 260, easing: Easing.in(Easing.cubic), useNativeDriver: true }),
+          Animated.timing(scale,      { toValue: 0.9, duration: 260, easing: Easing.in(Easing.cubic), useNativeDriver: true }),
+        ]).start();
+      }, 2200);
+    });
+  };
+
+  const animStyle = { opacity, transform: [{ translateY }, { scale }] };
+  return { show, animStyle };
+}
+
+// ── Screen ────────────────────────────────────────────────────────────────
 export default function CreateTab() {
   const t = useTheme();
   const { mutate: createTask, isPending } = useCreateTask();
+  const { show: showToast, animStyle: toastStyle } = useSuccessToast();
 
   const {
     title, description, status, priority, dueDate,
@@ -112,7 +146,11 @@ export default function CreateTab() {
     if (!validate()) return;
     const payload = { title: title.trim(), description: description.trim(), status, priority, dueDate };
     createTask(payload, {
-      onSuccess: () => reset(),
+      onSuccess: () => {
+        reset();
+        showToast();
+        scheduleTaskCreatedNotification(payload.title);
+      },
       onError: (err) => console.error("Create task failed →", err),
     });
   };
@@ -231,6 +269,21 @@ export default function CreateTab() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+
+      {/* ── Success Toast (rendered outside ScrollView so it floats) ── */}
+      <Animated.View style={[s.toast, toastStyle]} pointerEvents="none">
+        <BlurView intensity={28} tint="dark" style={StyleSheet.absoluteFill} />
+        <View style={s.toastInner}>
+          <View style={s.toastIconWrap}>
+            <Ionicons name="checkmark-circle" size={22} color="#32D74B" />
+          </View>
+          <View style={s.toastTextWrap}>
+            <Text style={s.toastTitle}>Task Created!</Text>
+            <Text style={s.toastSub}>Your task was added successfully.</Text>
+          </View>
+        </View>
+        <View style={s.toastGlow} />
+      </Animated.View>
     </View>
   );
 }
@@ -264,4 +317,47 @@ const s = StyleSheet.create({
   submitShine: { position: "absolute", top: 0, left: 0, right: 0, height: 1 },
   submitInner: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
   submitText: { fontSize: 16, fontWeight: "700", letterSpacing: 0.3 },
+
+  // Toast
+  toast: {
+    position: "absolute",
+    bottom: 110,
+    left: 20,
+    right: 20,
+    borderRadius: 20,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(50,215,75,0.35)",
+  },
+  toastInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  toastIconWrap: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: "rgba(50,215,75,0.15)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  toastTextWrap: { flex: 1, gap: 2 },
+  toastTitle: { color: "#fff", fontSize: 15, fontWeight: "700" },
+  toastSub: { color: "rgba(255,255,255,0.55)", fontSize: 12 },
+  toastGlow: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: "#32D74B",
+    shadowColor: "#32D74B",
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 4,
+  },
 });
