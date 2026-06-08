@@ -1,10 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   ScrollView,
   StyleSheet,
   Switch,
@@ -14,6 +16,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../hooks/useTheme";
+import { useCurrentUserData } from "../hooks/useUsers";
 import { useAuthStore } from "../store/authStore";
 import { useThemeStore } from "../store/themeStore";
 import { s } from "../styles/menu.styles";
@@ -32,10 +35,16 @@ type MenuRow = {
 
 export default function MenuTab() {
   const t = useTheme();
+  const { data: user } = useCurrentUserData();
   const { clearToken } = useAuthStore();
   const { isDark, setDark } = useThemeStore();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [notifications, setNotifications] = useState(true);
+
+  const imageUrl = user?.imageUrl?.trim();
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "Your Name";
+  const email = user?.email ?? "you@syncora.app";
+  const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase();
 
   const handleSignOut = () => {
     Alert.alert("Sign out", "Are you sure you want to sign out?", [
@@ -100,7 +109,7 @@ export default function MenuTab() {
     {
       title: "Account",
       rows: [
-        { icon: "person-circle-outline", label: "Profile", sublabel: "Edit your name, photo & bio", onPress: () => {} },
+        { icon: "person-circle-outline", label: "Profile", sublabel: "Edit your name, photo & bio", onPress: () => router.push("/screens/profile" as any) },
         { icon: "shield-checkmark-outline", label: "Privacy & Security", sublabel: "Password, 2FA, sessions", onPress: () => {} },
         { icon: "mail-outline", label: "Email & Notifications", sublabel: "Manage your contact info", onPress: () => {}, badge: "2" },
       ],
@@ -146,14 +155,31 @@ export default function MenuTab() {
             <BlurView intensity={16} tint={t.blurTint} style={StyleSheet.absoluteFill} />
             <View style={[s.sectionShine, { backgroundColor: t.glassShine }]} />
             <View style={[s.profileInner, { backgroundColor: t.glassBg }]}>
-              <View style={[s.avatar, { backgroundColor: t.glassBg, borderColor: t.glassBorder }]}>
-                <Ionicons name="person" size={30} color={t.textSecondary} />
+              <View style={[s.avatar, { borderColor: t.glassBorder }]}>
+                {imageUrl ? (
+                  <Image source={{ uri: imageUrl }} style={s.avatarImage} />
+                ) : initials ? (
+                  <>
+                    <LinearGradient
+                      colors={["#2a6fc4", "#4A9FE8"]}
+                      style={StyleSheet.absoluteFill}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                    />
+                    <Text style={s.avatarInitials}>{initials}</Text>
+                  </>
+                ) : (
+                  <Ionicons name="person" size={30} color={t.textSecondary} />
+                )}
               </View>
               <View style={s.profileText}>
-                <Text style={[s.profileName, { color: t.textPrimary }]}>Your Name</Text>
-                <Text style={[s.profileEmail, { color: t.textSecondary }]}>you@syncora.app</Text>
+                <Text style={[s.profileName, { color: t.textPrimary }]}>{fullName}</Text>
+                <Text style={[s.profileEmail, { color: t.textSecondary }]}>{email}</Text>
               </View>
-              <TouchableOpacity style={s.editBtn} activeOpacity={0.7}>
+              <TouchableOpacity
+                style={s.editBtn}
+                activeOpacity={0.7}
+                onPress={() => router.push("/screens/edit-profile" as any)}
+              >
                 <Ionicons name="pencil-outline" size={16} color="#4A9FE8" />
               </TouchableOpacity>
             </View>
