@@ -41,6 +41,7 @@ export const s = StyleSheet.create({
   avatarRing1:     { width: 100, height: 100, borderRadius: 30, borderWidth: 1, borderColor: "rgba(74,159,232,0.2)", alignItems: "center", justifyContent: "center", padding: 4 },
   avatarRing2:     { width: 90, height: 90, borderRadius: 26, overflow: "hidden", alignItems: "center", justifyContent: "center" },
   avatarCore:      { width: 90, height: 90, borderRadius: 26, backgroundColor: "rgba(10,24,40,0.7)", alignItems: "center", justifyContent: "center", position: "absolute" },
+  avatarImage:     { width: 90, height: 90, borderRadius: 26 },
   avatarText:      { color: "#fff", fontSize: 28, fontWeight: "900", letterSpacing: 1 },
   onlineDot:       { position: "absolute", bottom: 2, right: 2, width: 14, height: 14, borderRadius: 7, backgroundColor: "#32D74B", borderWidth: 2, borderColor: "#050d1a" },
 
