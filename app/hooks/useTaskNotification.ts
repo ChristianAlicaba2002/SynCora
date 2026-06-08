@@ -51,6 +51,24 @@ export async function scheduleTaskUpdatedNotification(title: string): Promise<vo
   }
 }
 
+export async function scheduleProfileUpdatedNotification(name?: string): Promise<void> {
+  if (Platform.OS === "web") return;
+  try {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "👤 Profile Updated",
+        body: name
+          ? `${name}'s profile has been updated successfully.`
+          : "Your profile has been updated successfully.",
+        sound: true,
+      },
+      trigger: null,
+    });
+  } catch (e) {
+    console.warn("[notifications] Could not schedule:", e);
+  }
+}
+
 export async function scheduleTaskDeletedNotification(title: string): Promise<void> {
   if (Platform.OS === "web") return;
   try {
