@@ -5,18 +5,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { scheduleProfileUpdatedNotification } from "../hooks/useTaskNotification";
 import { useCurrentUserData, useUpdateProfile } from "../hooks/useUsers";
 
 type Gender = "Male" | "Female" | "Other" | "Prefer not to say";
@@ -61,16 +62,23 @@ export default function EditProfileScreen() {
   const handleSave = () => {
     updateProfile(
       {
-        firstName:  firstName.trim(),
-        lastName:   lastName.trim(),
-        middleName: middleName.trim(),
-        bio:        bio.trim(),
-        gender,
-        imageUrl:   imageUrl.trim(),
+        userId: user?.id ?? "",
+        data: {
+          firstName:  firstName.trim(),
+          lastName:   lastName.trim(),
+          middleName: middleName.trim(),
+          bio:        bio.trim(),
+          gender,
+          imageUrl:   imageUrl.trim(),
+        }
       },
       {
-        onSuccess: () => router.back(),
-        onError:   (err) => console.error("Update profile failed →", err),
+        onSuccess: () => {
+          const name = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ");
+          scheduleProfileUpdatedNotification(name || undefined);
+          router.back();
+        },
+        onError: (err) => console.error("Update profile failed →", err),
       }
     );
   };
