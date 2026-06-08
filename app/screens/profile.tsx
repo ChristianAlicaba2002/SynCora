@@ -3,12 +3,13 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import {
-    ActivityIndicator,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGetTasks } from "../hooks/useTasks";
@@ -71,6 +72,7 @@ export default function ProfileScreen() {
   }
 
   const fullName = [user.firstName, user.middleName, user.lastName].filter(Boolean).join(" ");
+  const imageUrl = user.imageUrl?.trim();
 
   return (
     <View style={s.screen}>
@@ -127,14 +129,20 @@ export default function ProfileScreen() {
               <View style={s.avatarContainer}>
                 <View style={s.avatarRing1}>
                   <View style={s.avatarRing2}>
-                    <LinearGradient
-                      colors={["#4A9FE8", "#2a6fc4"]}
-                      style={StyleSheet.absoluteFill}
-                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-                    />
-                    <View style={s.avatarCore}>
-                      <Text style={s.avatarText}>{initials}</Text>
-                    </View>
+                    {imageUrl ? (
+                      <Image source={{ uri: imageUrl }} style={s.avatarImage} />
+                    ) : (
+                      <>
+                        <LinearGradient
+                          colors={["#4A9FE8", "#2a6fc4"]}
+                          style={StyleSheet.absoluteFill}
+                          start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+                        />
+                        <View style={s.avatarCore}>
+                          <Text style={s.avatarText}>{initials || "?"}</Text>
+                        </View>
+                      </>
+                    )}
                   </View>
                 </View>
                 {/* Online dot */}
