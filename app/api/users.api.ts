@@ -16,7 +16,7 @@ export const getCurrentUserAPI = async (): Promise<TUsers> => {
   return response.data.data;
 };
 
-export const updateProfileAPI = async (data: import("../@types").TUpdateProfile): Promise<TUsers> => {
-  const response = await api.patch<{ data: TUsers }>("/users/me", data);
+export const updateProfileAPI = async ({ userId, data }: { userId: string; data: import("../@types").TUpdateProfile }): Promise<TUsers> => {
+  const response = await api.patch<{ data: TUsers }>(`/users/${userId}`, data);
   return response.data.data;
 };
