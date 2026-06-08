@@ -5,11 +5,16 @@ import { router } from "expo-router";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "../hooks/useTheme";
+import { useCurrentUserData } from "../hooks/useUsers";
 import { s } from "../styles/appHeader.styles";
 
 export default function AppHeader() {
   const insets = useSafeAreaInsets();
   const t = useTheme();
+  const { data: user } = useCurrentUserData();
+
+  const imageUrl = user?.imageUrl?.trim();
+  const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase();
 
   return (
     <View style={[s.wrapper, { paddingTop: insets.top, borderBottomColor: t.headerBorder, backgroundColor: t.screen }]}>
@@ -63,13 +68,21 @@ export default function AppHeader() {
             style={s.avatarBtn}
             onPress={() => router.push("/screens/profile" as any)}
           >
-            <LinearGradient
-              colors={["#2a6fc4", "#4A9FE8"]}
-              style={StyleSheet.absoluteFill}
-              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-            />
+            {imageUrl ? (
+              <Image source={{ uri: imageUrl }} style={s.avatarImage} />
+            ) : (
+              <LinearGradient
+                colors={["#2a6fc4", "#4A9FE8"]}
+                style={StyleSheet.absoluteFill}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+              />
+            )}
             <View style={[s.avatarBorder, { borderColor: "rgba(74,159,232,0.6)" }]} />
-            <Ionicons name="person" size={16} color="#fff" />
+            {!imageUrl && (
+              initials
+                ? <Text style={s.avatarInitials}>{initials}</Text>
+                : <Ionicons name="person" size={16} color="#fff" />
+            )}
           </TouchableOpacity>
         </View>
       </View>
