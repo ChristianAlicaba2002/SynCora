@@ -27,7 +27,7 @@ export const s = StyleSheet.create({
   logoRing: {
     width: 40,
     height: 40,
-    borderRadius: 13,
+    borderRadius: 50,
     borderWidth: 1,
     overflow: "hidden",
     alignItems: "center",
@@ -37,6 +37,7 @@ export const s = StyleSheet.create({
     width: 40,
     height: 40,
     resizeMode: "cover",
+    borderRadius: 50,
   },
   wordmark: {
     gap: 1,
@@ -102,15 +103,25 @@ export const s = StyleSheet.create({
   avatarBtn: {
     width: 38,
     height: 38,
-    borderRadius: 13,
+    borderRadius: 50,
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
   },
   avatarBorder: {
     ...StyleSheet.absoluteFillObject,
-    borderRadius: 13,
+    borderRadius: 50,
     borderWidth: 1.5,
+  },
+  avatarImage: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 50,
+  },
+  avatarInitials: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
 
   // Bottom glow
