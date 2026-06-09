@@ -40,6 +40,9 @@ export type TTask = TTasks & {
   createdAt?: string,
   updatedAt?: string,
   userId?: string,
+  createdFullName?: string,
+  createdByFullName?: string,
+  imageUrl?: string,
 }
 
 export type TTasksResponse = {
