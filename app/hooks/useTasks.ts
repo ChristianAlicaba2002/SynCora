@@ -1,5 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createTaskAPI, deleteTaskAPI, getTaskByIdAPI, getTasksAPI, updateTaskAPI } from "../api/tasks.api";
+import { allTasksAPI, createTaskAPI, deleteTaskAPI, getTaskByIdAPI, getTasksAPI, updateTaskAPI } from "../api/tasks.api";
+
+export const useAllTasks = () => {
+  return useQuery({
+    queryKey: ["allTasks"],
+    queryFn: allTasksAPI,
+  });
+};
 
 export const useGetTasks = () => {
   return useQuery({
@@ -23,6 +30,7 @@ export const useCreateTask = () => {
     mutationFn: createTaskAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({queryKey: ["allTasks"]});
     },
   });
 };
@@ -35,6 +43,7 @@ export const useUpdateTask = () => {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
       queryClient.invalidateQueries({ queryKey: ["tasks", id] });
+      queryClient.invalidateQueries({queryKey: ["allTasks"]});
     },
   });
 };
@@ -46,6 +55,7 @@ export const useDeleteTask = () => {
     mutationFn: deleteTaskAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({queryKey: ["allTasks"]});
     },
   });
 };
