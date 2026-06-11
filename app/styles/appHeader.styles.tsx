@@ -124,6 +124,109 @@ export const s = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
+  // Search
+  searchBarRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+  },
+  searchBackBtn: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  searchInputWrap: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    height: 40,
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+    paddingVertical: 0,
+  },
+  resultsPanel: {
+    maxHeight: 320,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    zIndex: 10,
+  },
+  resultsHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  resultsHeaderText: {
+    fontSize: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+  },
+  resultsCount: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  resultsList: {
+    maxHeight: 280,
+  },
+  resultsState: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 20,
+  },
+  resultsStateText: {
+    fontSize: 14,
+  },
+  resultRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    gap: 12,
+  },
+  resultAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  resultAvatarImage: {
+    width: 40,
+    height: 40,
+  },
+  resultInitials: {
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "800",
+    textAlign: "center",
+    lineHeight: 40,
+  },
+  resultText: {
+    flex: 1,
+    gap: 2,
+  },
+  resultName: {
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  resultPreview: {
+    fontSize: 12,
+  },
+
   // Bottom glow
   bottomGlow: {
     position: "absolute",
