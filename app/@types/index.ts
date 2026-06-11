@@ -11,6 +11,15 @@ export type TUsers = {
     imageUrl: string,
     createdAt: string,
     updatedAt: string,
+    isFollowing?: boolean,
+    isRequested?: boolean,
+    hasIncomingRequest?: boolean,
+}
+
+export type TFollowStatus = {
+    isFollowing: boolean,
+    isRequested: boolean,
+    hasIncomingRequest?: boolean,
 }
 
 export type TRegisterUser = Pick<TUsers, "firstName" | "lastName" | "middleName" | "gender" | "email" | "password" | "confirmPassword">
