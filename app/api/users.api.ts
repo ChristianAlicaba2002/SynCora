@@ -16,7 +16,19 @@ export const getCurrentUserAPI = async (): Promise<TUsers> => {
   return response.data.data;
 };
 
+export const getUserByIdAPI = async (id: string): Promise<TUsers> => {
+  const response = await api.get<{ data: TUsers }>(`/users/${id}`);
+  return response.data.data;
+};
+
 export const updateProfileAPI = async ({ userId, data }: { userId: string; data: import("../@types").TUpdateProfile }): Promise<TUsers> => {
   const response = await api.patch<{ data: TUsers }>(`/users/${userId}`, data);
+  return response.data.data;
+};
+
+export const searchUserAPI = async (query: string): Promise<TUsers[]> => {
+  const response = await api.get<{ data: TUsers[] }>("/users/search", {
+    params: { searchQuery: query },
+  });
   return response.data.data;
 };
