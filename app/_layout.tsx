@@ -27,6 +27,7 @@ function RootLayoutNav() {
       <Stack.Screen name="screens/task/edit/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="screens/profile" options={{ headerShown: false }} />
       <Stack.Screen name="screens/edit-profile" options={{ headerShown: false }} />
+      <Stack.Screen name="screens/user/[id]" options={{ headerShown: false }} />
     </Stack>
   );
 }
