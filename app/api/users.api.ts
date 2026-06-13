@@ -1,4 +1,4 @@
-import type { TLoginResponse, TLoginUser, TRegisterUser, TUsers } from "../@types";
+import type { TFollowRequestReponse, TLoginResponse, TLoginUser, TRegisterUser, TUsers } from "../@types";
 import { api } from "./axios";
 
 export const LoginUserAPI = async (data: TLoginUser): Promise<TLoginResponse> => {
@@ -32,3 +32,8 @@ export const searchUserAPI = async (query: string): Promise<TUsers[]> => {
   });
   return response.data.data;
 };
+
+export const getUserFollowRequestAPI = async (): Promise<TFollowRequestReponse[]> => {
+  const response = await api.get<{ data: TFollowRequestReponse[] }>("/follows");
+  return response.data.data;
+}
