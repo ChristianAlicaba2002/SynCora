@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { acceptFollowRequestAPI, cancelFollowRequestAPI, sendFollowRequestAPI } from "../api/follows.api";
-import { getCurrentUserAPI, getUserByIdAPI, LoginUserAPI, RegisterUserAPI, searchUserAPI, updateProfileAPI } from "../api/users.api";
 import type { TFollowStatus } from "../@types";
+import { acceptFollowRequestAPI, cancelFollowRequestAPI, sendFollowRequestAPI } from "../api/follows.api";
+import { getCurrentUserAPI, getUserByIdAPI, getUserFollowRequestAPI, LoginUserAPI, RegisterUserAPI, searchUserAPI, updateProfileAPI } from "../api/users.api";
 
 export const useLoginUser = () => {
     return useMutation({
@@ -115,5 +115,12 @@ export const useSearchUser = (query: string) => {
         queryKey: ["searchUser", trimmed],
         queryFn: () => searchUserAPI(trimmed),
         enabled: trimmed.length >= 2,
+    });
+};
+
+export const useGetUserFollowRequest = () => {
+    return useQuery({
+        queryKey: ["userFollowRequest"],
+        queryFn: getUserFollowRequestAPI,
     });
 };
