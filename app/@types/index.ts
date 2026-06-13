@@ -59,3 +59,12 @@ export type TTasksResponse = {
   status: number,
   data: TTask[],
 }
+
+export type TFollowRequestReponse = {
+  id: string,
+  senderId: string,
+  receiverId: string,
+  status: string,
+  createdAt: string,
+  sender: Pick<TUsers, "id" | "firstName" | "middleName" | "lastName" | "imageUrl">,
+}
