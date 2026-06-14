@@ -62,36 +62,36 @@ export const useFollowStatus = (userId: string) => {
 };
 
 export const useSendFollowRequest = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationKey: ["sendFollowRequest"],
-    mutationFn: sendFollowRequestAPI,
-    onSuccess: (_, receiverId) => {
-      queryClient.setQueryData(["followStatus", receiverId], {
-        isFollowing: false,
-        isRequested: true,
-        hasIncomingRequest: false,
-      });
-      queryClient.invalidateQueries({ queryKey: ["user", receiverId] });
-    },
-  });
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationKey: ["sendFollowRequest"],
+        mutationFn: sendFollowRequestAPI,
+        onSuccess: (_, receiverId) => {
+            queryClient.setQueryData(["followStatus", receiverId], {
+                isFollowing: false,
+                isRequested: true,
+                hasIncomingRequest: false,
+            });
+            queryClient.invalidateQueries({ queryKey: ["user", receiverId] });
+        },
+    });
 };
 
 export const useAcceptFollowRequest = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationKey: ["acceptFollowRequest"],
-    mutationFn: acceptFollowRequestAPI,
-    onSuccess: (_, requestId) => {
-      queryClient.setQueryData(["followStatus", requestId], {
-        isFollowing: true,
-        isRequested: false,
-        hasIncomingRequest: false,
-      });
-      queryClient.invalidateQueries({ queryKey: ["user", requestId] });
-      queryClient.invalidateQueries({ queryKey: ["userFollowRequest"] });
-    },
-  });
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationKey: ["acceptFollowRequest"],
+        mutationFn: acceptFollowRequestAPI,
+        onSuccess: (_, requestId) => {
+            queryClient.setQueryData(["followStatus", requestId], {
+                isFollowing: true,
+                isRequested: false,
+                hasIncomingRequest: false,
+            });
+            queryClient.invalidateQueries({ queryKey: ["user", requestId] });
+            queryClient.invalidateQueries({ queryKey: ["userFollowRequest"] });
+        },
+    });
 };
 
 export const useCancelFollowRequest = () => {
@@ -112,19 +112,19 @@ export const useCancelFollowRequest = () => {
 };
 
 export const useUnfollow = () => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationKey: ["unfollow"],
-    mutationFn: unfollowAPI,
-    onSuccess: (_, userId) => {
-      queryClient.setQueryData(["followStatus", userId], {
-        isFollowing: false,
-        isRequested: false,
-        hasIncomingRequest: false,
-      });
-      queryClient.invalidateQueries({ queryKey: ["user", userId] });
-    },
-  });
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationKey: ["unfollow"],
+        mutationFn: unfollowAPI,
+        onSuccess: (_, userId) => {
+            queryClient.setQueryData(["followStatus", userId], {
+                isFollowing: false,
+                isRequested: false,
+                hasIncomingRequest: false,
+            });
+            queryClient.invalidateQueries({ queryKey: ["user", userId] });
+        },
+    });
 };
 
 export const useSearchUser = (query: string) => {
