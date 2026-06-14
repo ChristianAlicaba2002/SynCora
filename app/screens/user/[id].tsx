@@ -19,6 +19,7 @@ import {
   useFollowStatus,
   useGetUserById,
   useSendFollowRequest,
+  useUnfollow,
 } from "../../hooks/useUsers";
 import { s } from "../../styles/userProfile.styles";
 
@@ -80,11 +81,12 @@ function FollowButton({
   const { mutate: sendRequest, isPending: sending } = useSendFollowRequest();
   const { mutate: acceptRequest, isPending: accepting } = useAcceptFollowRequest();
   const { mutate: cancelRequest, isPending: cancelling } = useCancelFollowRequest();
+  const { mutate: unfollow, isPending: unfollowing } = useUnfollow();
 
   const isFollowing = followStatus?.isFollowing ?? initialFollowing ?? false;
   const isRequested = followStatus?.isRequested ?? initialRequested ?? false;
   const hasIncoming = followStatus?.hasIncomingRequest ?? initialIncoming ?? false;
-  const isPending = sending || accepting || cancelling;
+  const isPending = sending || accepting || cancelling || unfollowing;
 
   const handleSend = () => {
     if (!isPending) sendRequest(userId);
@@ -113,44 +115,72 @@ function FollowButton({
 
   if (hasIncoming) {
     return (
-      <TouchableOpacity onPress={handleAccept} activeOpacity={0.85} disabled={isPending}>
-        <LinearGradient
-          colors={["#32D74B", "#1a9e30"]}
-          style={s.followBtn}
-          start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+      <View style={s.followBtnRow}>
+        {/* Accept button */}
+        <TouchableOpacity onPress={handleAccept} activeOpacity={0.85} disabled={isPending}>
+          <LinearGradient
+            colors={["#32D74B", "#1a9e30"]}
+            style={s.followBtn}
+            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+          >
+            {isPending ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <View style={s.followBtnInner}>
+                <Ionicons name="checkmark-circle-outline" size={14} color="#fff" />
+                <Text style={s.followBtnText}>Accept</Text>
+              </View>
+            )}
+          </LinearGradient>
+        </TouchableOpacity>
+        {/* Cancel button */}
+        <TouchableOpacity
+          onPress={handleCancel}
+          activeOpacity={0.85}
+          disabled={isPending}
+          style={[s.followBtn, s.cancelBtnOutline]}
         >
           {isPending ? (
-            <ActivityIndicator size="small" color="#fff" />
+            <ActivityIndicator size="small" color="#FF453A" />
           ) : (
             <View style={s.followBtnInner}>
-              <Ionicons name="checkmark-circle-outline" size={16} color="#fff" />
-              <Text style={s.followBtnText}>Accept</Text>
+              <Ionicons name="close-circle-outline" size={14} color="#FF453A" />
+              <Text style={[s.followBtnText, { color: "#FF453A" }]}>Cancel</Text>
             </View>
           )}
-        </LinearGradient>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     );
   }
 
   if (isFollowing) {
+    // Show "Followed" label and an "Unfollow" button
     return (
-      <TouchableOpacity
-        style={[s.followBtn, s.followBtnOutline]}
-        onPress={handleCancel}
-        activeOpacity={0.8}
-        disabled={isPending}
-      >
-        <View style={s.followBtnInner}>
-          {isPending ? (
-            <ActivityIndicator size="small" color="rgba(255,255,255,0.85)" />
-          ) : (
-            <>
-              <Ionicons name="checkmark" size={16} color="rgba(255,255,255,0.85)" />
-              <Text style={s.followBtnTextMuted}>Following</Text>
-            </>
-          )}
+      <View style={s.followBtnRow}>
+        {/* Followed label */}
+        <View style={[s.followBtn, s.followBtnOutline]}>
+          <View style={s.followBtnInner}>
+            <Ionicons name="checkmark" size={14} color="rgba(255,255,255,0.85)" />
+            <Text style={s.followBtnTextMuted}>Followed</Text>
+          </View>
         </View>
-      </TouchableOpacity>
+        {/* Unfollow button */}
+        <TouchableOpacity
+          onPress={() => unfollow(userId)}
+          activeOpacity={0.85}
+          disabled={isPending}
+          style={[s.followBtn, s.cancelBtnOutline]}
+        >
+          {isPending ? (
+            <ActivityIndicator size="small" color="#FF453A" />
+          ) : (
+            <View style={s.followBtnInner}>
+              <Ionicons name="person-remove-outline" size={14} color="#FF453A" />
+              <Text style={[s.followBtnText, { color: "#FF453A" }]}>Unfollow</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
     );
   }
 
@@ -167,7 +197,7 @@ function FollowButton({
             <ActivityIndicator size="small" color="#F5A623" />
           ) : (
             <>
-              <Ionicons name="time-outline" size={16} color="#F5A623" />
+              <Ionicons name="time-outline" size={14} color="#F5A623" />
               <Text style={[s.followBtnTextMuted, { color: "#F5A623" }]}>Follow Request</Text>
             </>
           )}
@@ -187,7 +217,7 @@ function FollowButton({
           <ActivityIndicator size="small" color="#fff" />
         ) : (
           <View style={s.followBtnInner}>
-            <Ionicons name="person-add-outline" size={16} color="#fff" />
+            <Ionicons name="person-add-outline" size={14} color="#fff" />
             <Text style={s.followBtnText}>Follow</Text>
           </View>
         )}
@@ -197,9 +227,10 @@ function FollowButton({
 }
 
 export default function UserProfileScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, query } = useLocalSearchParams<{ id?: string; query?: string }>();
+  const userId = id ?? query ?? "";
   const { data: currentUser } = useCurrentUserData();
-  const { data: user, isLoading, isError, refetch } = useGetUserById(id ?? "");
+  const { data: user, isLoading, isError, refetch } = useGetUserById(userId);
 
   if (isLoading && !user) {
     return (
