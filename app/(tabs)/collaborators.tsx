@@ -3,7 +3,7 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../hooks/useTheme";
 import { useGetUserFollowRequest } from "../hooks/useUsers";
 
@@ -28,7 +28,21 @@ function formatDate(iso: string) {
 export default function CollaboratorsTab() {
   const t = useTheme();
   const [userId, setUserId] = useState<string | null>(null);
-  const { data, isLoading } = useGetUserFollowRequest();
+  const [refreshing, setRefreshing] = useState(false);
+  const { data, isLoading, refetch } = useGetUserFollowRequest();
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } catch (error) {
+      console.error("Failed to refetch collaborators:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const hasData = data && data.length > 0;
 
   return (
     <View style={[s.screen, { backgroundColor: t.screen }]}>
@@ -40,12 +54,31 @@ export default function CollaboratorsTab() {
           <ActivityIndicator size="large" color="#4A9FE8" />
           <Text style={[s.subtitle, { color: t.textSecondary }]}>Loading collaborators...</Text>
         </View>
-      ) : data && data.length > 0 ? (
+      ) : (
         <FlatList
-          data={data}
+          data={data || []}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={s.list}
+          contentContainerStyle={hasData ? s.list : [s.list, { flexGrow: 1, justifyContent: "center" }]}
           showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#4A9FE8"
+              colors={["#4A9FE8"]}
+            />
+          }
+          ListEmptyComponent={
+            <View style={s.center}>
+              <View style={[s.emptyIconContainer, { backgroundColor: t.glassBg, borderColor: t.glassBorder }]}>
+                <Ionicons name="people-outline" size={36} color={t.textSecondary} />
+              </View>
+              <Text style={[s.emptyTitle, { color: t.textPrimary }]}>No Collaborators Yet</Text>
+              <Text style={[s.emptySubtitle, { color: t.textSecondary }]}>
+                Sent or received follow requests will appear here once active.
+              </Text>
+            </View>
+          }
           renderItem={({ item }) => {
             const isPending = item.status.toLowerCase() === "pending";
             return (
@@ -109,16 +142,6 @@ export default function CollaboratorsTab() {
             );
           }}
         />
-      ) : (
-        <View style={s.center}>
-          <View style={[s.emptyIconContainer, { backgroundColor: t.glassBg, borderColor: t.glassBorder }]}>
-            <Ionicons name="people-outline" size={36} color={t.textSecondary} />
-          </View>
-          <Text style={[s.emptyTitle, { color: t.textPrimary }]}>No Collaborators Yet</Text>
-          <Text style={[s.emptySubtitle, { color: t.textSecondary }]}>
-            Sent or received follow requests will appear here once active.
-          </Text>
-        </View>
       )}
     </View>
   );
