@@ -90,7 +90,41 @@ export const LIGHT = {
   submitBg:     "#1A4F7A",
 } as const;
 
-export type Theme = typeof DARK;
+export interface Theme {
+  readonly screen: string;
+  readonly screenMid: string;
+  readonly glassBg: string;
+  readonly glassBorder: string;
+  readonly glassShine: string;
+  readonly textPrimary: string;
+  readonly textSecondary: string;
+  readonly textMuted: string;
+  readonly inputBg: string;
+  readonly inputBorder: string;
+  readonly inputText: string;
+  readonly placeholder: string;
+  readonly tabBar: string;
+  readonly tabBarBorder: string;
+  readonly tabActive: string;
+  readonly tabInactive: string;
+  readonly headerBg: string;
+  readonly headerBorder: string;
+  readonly headerIcon: string;
+  readonly blob1: string;
+  readonly blob2: string;
+  readonly blob3: string;
+  readonly searchBg: string;
+  readonly searchBorder: string;
+  readonly searchText: string;
+  readonly searchPlaceholder: string;
+  readonly rowBorder: string;
+  readonly sectionTitle: string;
+  readonly footer: string;
+  readonly chevron: string;
+  readonly blurTint: "dark" | "light" | "default" | "prominent" | "regular";
+  readonly submitText: string;
+  readonly submitBg: string;
+}
 
 export function useTheme(): Theme {
   const isDark = useThemeStore((s) => s.isDark);
