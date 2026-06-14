@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { TFollowStatus } from "../@types";
-import { acceptFollowRequestAPI, cancelFollowRequestAPI, sendFollowRequestAPI } from "../api/follows.api";
+import { acceptFollowRequestAPI, cancelFollowRequestAPI, sendFollowRequestAPI, unfollowAPI } from "../api/follows.api";
 import { getCurrentUserAPI, getUserByIdAPI, getUserFollowRequestAPI, LoginUserAPI, RegisterUserAPI, searchUserAPI, updateProfileAPI } from "../api/users.api";
 
 export const useLoginUser = () => {
@@ -62,35 +62,36 @@ export const useFollowStatus = (userId: string) => {
 };
 
 export const useSendFollowRequest = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationKey: ["sendFollowRequest"],
-        mutationFn: sendFollowRequestAPI,
-        onSuccess: (_, followeeId) => {
-            queryClient.setQueryData(["followStatus", followeeId], {
-                isFollowing: false,
-                isRequested: true,
-                hasIncomingRequest: false,
-            });
-            queryClient.invalidateQueries({ queryKey: ["user", followeeId] });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["sendFollowRequest"],
+    mutationFn: sendFollowRequestAPI,
+    onSuccess: (_, receiverId) => {
+      queryClient.setQueryData(["followStatus", receiverId], {
+        isFollowing: false,
+        isRequested: true,
+        hasIncomingRequest: false,
+      });
+      queryClient.invalidateQueries({ queryKey: ["user", receiverId] });
+    },
+  });
 };
 
 export const useAcceptFollowRequest = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationKey: ["acceptFollowRequest"],
-        mutationFn: acceptFollowRequestAPI,
-        onSuccess: (_, followerId) => {
-            queryClient.setQueryData(["followStatus", followerId], {
-                isFollowing: true,
-                isRequested: false,
-                hasIncomingRequest: false,
-            });
-            queryClient.invalidateQueries({ queryKey: ["user", followerId] });
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["acceptFollowRequest"],
+    mutationFn: acceptFollowRequestAPI,
+    onSuccess: (_, requestId) => {
+      queryClient.setQueryData(["followStatus", requestId], {
+        isFollowing: true,
+        isRequested: false,
+        hasIncomingRequest: false,
+      });
+      queryClient.invalidateQueries({ queryKey: ["user", requestId] });
+      queryClient.invalidateQueries({ queryKey: ["userFollowRequest"] });
+    },
+  });
 };
 
 export const useCancelFollowRequest = () => {
@@ -105,8 +106,25 @@ export const useCancelFollowRequest = () => {
                 hasIncomingRequest: false,
             });
             queryClient.invalidateQueries({ queryKey: ["user", followeeId] });
+            queryClient.invalidateQueries({ queryKey: ["userFollowRequest"] });
         },
     });
+};
+
+export const useUnfollow = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["unfollow"],
+    mutationFn: unfollowAPI,
+    onSuccess: (_, userId) => {
+      queryClient.setQueryData(["followStatus", userId], {
+        isFollowing: false,
+        isRequested: false,
+        hasIncomingRequest: false,
+      });
+      queryClient.invalidateQueries({ queryKey: ["user", userId] });
+    },
+  });
 };
 
 export const useSearchUser = (query: string) => {
