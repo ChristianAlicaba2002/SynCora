@@ -135,7 +135,7 @@ export default function MenuTab() {
       rows: [
         { icon: "help-circle-outline", label: "Help & FAQ", onPress: () => {} },
         { icon: "chatbubble-ellipses-outline", label: "Send Feedback", onPress: () => {} },
-        { icon: "information-circle-outline", label: "About SynCora", sublabel: "v1.0.0", onPress: () => {} },
+        { icon: "information-circle-outline", label: "About SynCora", sublabel: "v1.0.0", onPress: () => {router.push("/screens/about" as any)} },
       ],
     },
   ];
