@@ -1,0 +1,118 @@
+import { StyleSheet } from "react-native";
+
+export const s = StyleSheet.create({
+  screen: { flex: 1 },
+  safe: { flex: 1 },
+  scroll: { paddingHorizontal: 16, paddingBottom: 40, gap: 14 },
+
+  blob: { position: "absolute", borderRadius: 999, opacity: 0.18 },
+  blob1: { width: 300, height: 300, top: -80, left: -80 },
+  blob2: { width: 240, height: 240, top: 280, right: -60 },
+  blob3: { width: 180, height: 180, bottom: 80, left: 20 },
+
+  topBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 13,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  backBtnBorder: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 13,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.12)",
+  },
+  titlePill: {
+    overflow: "hidden",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+  },
+  titlePillText: { fontSize: 15, fontWeight: "700", letterSpacing: 0.3 },
+  topSpacer: { width: 40 },
+
+  hero: {
+    borderRadius: 24,
+    overflow: "hidden",
+    borderWidth: 1,
+    alignItems: "center",
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+    gap: 10,
+  },
+  logoWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(74,159,232,0.3)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 4,
+  },
+  logo: { width: 56, height: 56, resizeMode: "contain" },
+  appName: { fontSize: 26, fontWeight: "900", letterSpacing: 0.5 },
+  tagline: { fontSize: 14, textAlign: "center", lineHeight: 21, paddingHorizontal: 8 },
+  versionBadge: {
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(74,159,232,0.35)",
+    backgroundColor: "rgba(74,159,232,0.12)",
+  },
+  versionText: { color: "#4A9FE8", fontSize: 12, fontWeight: "700" },
+
+  card: { borderRadius: 20, overflow: "hidden", borderWidth: 1 },
+  cardInner: { padding: 16, gap: 12 },
+  cardHead: { flexDirection: "row", alignItems: "center", gap: 10 },
+  cardAccent: { width: 3, height: 16, borderRadius: 2 },
+  cardTitle: { fontSize: 11, fontWeight: "700", letterSpacing: 1.3, textTransform: "uppercase" },
+  bodyText: { fontSize: 15, lineHeight: 23 },
+
+  featureRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 12,
+    paddingVertical: 10,
+  },
+  featureRowBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "rgba(255,255,255,0.07)",
+  },
+  featureIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 9,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  featureBody: { flex: 1, gap: 2 },
+  featureLabel: { fontSize: 15, fontWeight: "600" },
+  featureDesc: { fontSize: 13, lineHeight: 19 },
+
+  techGrid: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  techChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  techChipText: { fontSize: 12, fontWeight: "600" },
+
+  footer: { fontSize: 12, textAlign: "center", marginTop: 4 },
+});
