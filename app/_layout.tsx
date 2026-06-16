@@ -19,15 +19,16 @@ function RootLayoutNav() {
   }, []);
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="register" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="screens/task/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="screens/task/edit/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="screens/profile" options={{ headerShown: false }} />
-      <Stack.Screen name="screens/edit-profile" options={{ headerShown: false }} />
-      <Stack.Screen name="screens/user/[id]" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="register" />
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="screens/task/[id]" />
+      <Stack.Screen name="screens/task/edit/[id]" />
+      <Stack.Screen name="screens/profile" />
+      <Stack.Screen name="screens/edit-profile" />
+      <Stack.Screen name="screens/user/[id]" />
+      <Stack.Screen name="screens/about/index" />
     </Stack>
   );
 }
