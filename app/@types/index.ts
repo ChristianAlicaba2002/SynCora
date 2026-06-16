@@ -68,3 +68,10 @@ export type TFollowRequestReponse = {
   createdAt: string,
   sender: Pick<TUsers, "id" | "firstName" | "middleName" | "lastName" | "imageUrl">,
 }
+
+export type TUserFollowersCountResponse = 
+{
+  message: string,
+  status: number,
+  data: number,
+}
