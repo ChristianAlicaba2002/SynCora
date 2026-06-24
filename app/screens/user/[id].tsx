@@ -18,6 +18,9 @@ import {
   useCurrentUserData,
   useFollowStatus,
   useGetUserById,
+  useGetUserFollowRequest,
+  useGetUserFollowersCount,
+  useGetUserFollowingCount,
   useSendFollowRequest,
   useUnfollow,
 } from "../../hooks/useUsers";
@@ -78,6 +81,7 @@ function FollowButton({
   initialIncoming?: boolean;
 }) {
   const { data: followStatus, isLoading: statusLoading } = useFollowStatus(userId);
+  const { data: followRequests } = useGetUserFollowRequest();
   const { mutate: sendRequest, isPending: sending } = useSendFollowRequest();
   const { mutate: acceptRequest, isPending: accepting } = useAcceptFollowRequest();
   const { mutate: cancelRequest, isPending: cancelling } = useCancelFollowRequest();
@@ -88,6 +92,10 @@ function FollowButton({
   const hasIncoming = followStatus?.hasIncomingRequest ?? initialIncoming ?? false;
   const isPending = sending || accepting || cancelling || unfollowing;
 
+  const incomingRequestId = followRequests?.find(
+    (req) => req.senderId === userId && req.status.toLowerCase() === "pending"
+  )?.id;
+
   const handleSend = () => {
     if (!isPending) sendRequest(userId);
   };
@@ -97,7 +105,9 @@ function FollowButton({
   };
 
   const handleAccept = () => {
-    if (!isPending) acceptRequest(userId);
+    if (!isPending && incomingRequestId) {
+      acceptRequest({ requestId: incomingRequestId, senderId: userId });
+    }
   };
 
   const hasInitial =
@@ -117,7 +127,7 @@ function FollowButton({
     return (
       <View style={s.followBtnRow}>
         {/* Accept button */}
-        <TouchableOpacity onPress={handleAccept} activeOpacity={0.85} disabled={isPending}>
+        <TouchableOpacity onPress={handleAccept} activeOpacity={0.85} disabled={isPending || !incomingRequestId}>
           <LinearGradient
             colors={["#32D74B", "#1a9e30"]}
             style={s.followBtn}
@@ -231,6 +241,8 @@ export default function UserProfileScreen() {
   const userId = id ?? query ?? "";
   const { data: currentUser } = useCurrentUserData();
   const { data: user, isLoading, isError, refetch } = useGetUserById(userId);
+  const { data: followersCount = 0, isLoading: followersLoading } = useGetUserFollowersCount(userId);
+  const { data: followingCount = 0, isLoading: followingLoading } = useGetUserFollowingCount(userId);
 
   if (isLoading && !user) {
     return (
@@ -326,6 +338,26 @@ export default function UserProfileScreen() {
 
               <Text style={s.heroName}>{fullName}</Text>
               <Text style={s.heroEmail}>{user.email}</Text>
+
+              <View style={s.followRow}>
+                <View style={s.followStat}>
+                  {followersLoading ? (
+                    <ActivityIndicator size="small" color="#4A9FE8" />
+                  ) : (
+                    <Text style={s.followValue}>{followersCount}</Text>
+                  )}
+                  <Text style={s.followLabel}>Followers</Text>
+                </View>
+                <View style={s.followDivider} />
+                <View style={s.followStat}>
+                  {followingLoading ? (
+                    <ActivityIndicator size="small" color="#4A9FE8" />
+                  ) : (
+                    <Text style={s.followValue}>{followingCount}</Text>
+                  )}
+                  <Text style={s.followLabel}>Following</Text>
+                </View>
+              </View>
 
               <View style={s.badgeRow}>
                 {user.gender ? (
