@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useGetTasks } from "../hooks/useTasks";
-import { useCurrentUserData } from "../hooks/useUsers";
+import { useCurrentUserData, useGetUserFollowersCount, useGetUserFollowingCount } from "../hooks/useUsers";
 import { s } from "../styles/profile.styles";
 
 function getInitials(firstName?: string, lastName?: string) {
@@ -29,6 +29,8 @@ function formatDate(iso?: string) {
 export default function ProfileScreen() {
   const { data: user, isLoading, isError, refetch } = useCurrentUserData();
   const { data: tasks } = useGetTasks();
+  const { data: followersCount = 0, isLoading: followersLoading } = useGetUserFollowersCount(user?.id);
+  const { data: followingCount = 0, isLoading: followingLoading } = useGetUserFollowingCount(user?.id);
 
   const total      = tasks?.length ?? 0;
   const done       = tasks?.filter((t) => t.status === "done").length ?? 0;
@@ -152,6 +154,26 @@ export default function ProfileScreen() {
               {/* Identity */}
               <Text style={s.heroName}>{fullName}</Text>
               <Text style={s.heroEmail}>{user.email}</Text>
+
+              <View style={s.followRow}>
+                <View style={s.followStat}>
+                  {followersLoading ? (
+                    <ActivityIndicator size="small" color="#4A9FE8" />
+                  ) : (
+                    <Text style={s.followValue}>{followersCount}</Text>
+                  )}
+                  <Text style={s.followLabel}>Followers</Text>
+                </View>
+                <View style={s.followDivider} />
+                <View style={s.followStat}>
+                  {followingLoading ? (
+                    <ActivityIndicator size="small" color="#4A9FE8" />
+                  ) : (
+                    <Text style={s.followValue}>{followingCount}</Text>
+                  )}
+                  <Text style={s.followLabel}>Following</Text>
+                </View>
+              </View>
 
               {/* Badges */}
               <View style={s.badgeRow}>
