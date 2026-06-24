@@ -47,6 +47,11 @@ export const s = StyleSheet.create({
 
   heroName:  { color: "#fff", fontSize: 22, fontWeight: "900", textAlign: "center", letterSpacing: 0.2 },
   heroEmail: { color: "rgba(255,255,255,0.4)", fontSize: 13 },
+  followRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 20, marginTop: 4 },
+  followStat: { alignItems: "center", gap: 2, minWidth: 72 },
+  followValue: { color: "#fff", fontSize: 18, fontWeight: "900" },
+  followLabel: { color: "rgba(255,255,255,0.4)", fontSize: 11, fontWeight: "600", textTransform: "uppercase", letterSpacing: 0.6 },
+  followDivider: { width: 1, height: 28, backgroundColor: "rgba(255,255,255,0.12)" },
   badgeRow:  { flexDirection: "row", gap: 8, flexWrap: "wrap", justifyContent: "center" },
   badge:     { flexDirection: "row", alignItems: "center", gap: 5, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 14, borderWidth: 1 },
   badgeText: { fontSize: 12, fontWeight: "700" },
