@@ -91,6 +91,19 @@ function getCreatorImageUrl(task: TTask): string | undefined {
   return undefined;
 }
 
+function getCreatorUserId(task: TTask): string | undefined {
+  const raw = task as TTask & Record<string, unknown>;
+  const nestedUser = raw.user as { id?: string; Id?: string } | undefined;
+  const id =
+    task.userId ??
+    raw.userId ??
+    raw.UserId ??
+    nestedUser?.id ??
+    nestedUser?.Id;
+  if (typeof id === "string" && id.trim()) return id.trim();
+  return undefined;
+}
+
 function getTaskAuthor(task: TTask): TaskAuthor {
   const name = getCreatorFullName(task);
   const imageUrl = getCreatorImageUrl(task);
@@ -123,6 +136,7 @@ function FeedPost({
   const status   = STATUS_CONFIG[task.status] ?? STATUS_CONFIG.todo;
   const priority = PRIORITY_CONFIG[task.priority] ?? PRIORITY_CONFIG.medium;
   const author   = getTaskAuthor(task);
+  const creatorUserId = getCreatorUserId(task);
   const postedAt = timeAgo(task.createdAt ?? task.updatedAt);
 
   return (
@@ -144,7 +158,13 @@ function FeedPost({
             </View>
           </LinearGradient>
           <View>
-            <Text style={[s.postAuthor, { color: textPrimary }]}>{author.name}</Text>
+            <TouchableOpacity
+              onPress={() => creatorUserId && router.push(`/screens/user/${creatorUserId}` as any)}
+              disabled={!creatorUserId}
+              activeOpacity={0.7}
+            >
+              <Text style={[s.postAuthor, { color: textPrimary }]}>{author.name}</Text>
+            </TouchableOpacity>
             <Text style={[s.postMeta, { color: textSecondary }]}>{postedAt} · posted a task</Text>
           </View>
         </View>
