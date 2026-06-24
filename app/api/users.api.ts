@@ -1,4 +1,4 @@
-import type { TFollowRequestReponse, TLoginResponse, TLoginUser, TRegisterUser, TUsers } from "../@types";
+import type { TFollowRequestReponse, TLoginResponse, TLoginUser, TRegisterUser, TUserFollowersCountResponse, TUsers } from "../@types";
 import { api } from "./axios";
 
 export const LoginUserAPI = async (data: TLoginUser): Promise<TLoginResponse> => {
@@ -37,3 +37,19 @@ export const getUserFollowRequestAPI = async (): Promise<TFollowRequestReponse[]
   const response = await api.get<{ data: TFollowRequestReponse[] }>("/follows");
   return response.data.data;
 }
+
+function extractFollowCount(payload: TUserFollowersCountResponse | number): number {
+  return typeof payload === "number" ? payload : payload.data;
+}
+
+export const getUserFollowersCountAPI = async (userId?: string): Promise<number> => {
+  const url = userId ? `/users/${userId}/followers-count` : "/users/followers-count";
+  const response = await api.get<{ data: TUserFollowersCountResponse | number }>(url);
+  return extractFollowCount(response.data.data);
+};
+
+export const getUserFollowingCountAPI = async (userId?: string): Promise<number> => {
+  const url = userId ? `/users/${userId}/following-count` : "/users/following-count";
+  const response = await api.get<{ data: TUserFollowersCountResponse | number }>(url);
+  return extractFollowCount(response.data.data);
+};
