@@ -2,19 +2,17 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install Expo CLI
-RUN npm install -g expo-cli
+RUN addgroup -g 1001 appgroup && adduser -S appuser -u 1001 -G appgroup
 
-# Copy package files first
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy project files
 COPY . .
 
-# Expo ports
-EXPOSE 8081
+RUN mkdir -p /app/.expo && chown -R appuser:appgroup /app
 
-CMD ["npx", "expo", "start", "--tunnel"]
+USER appuser
+
+EXPOSE 5173
+
+CMD ["npx", "expo", "start", "--tunnel", "--clear"]
